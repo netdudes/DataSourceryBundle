@@ -1,0 +1,20 @@
+services:
+    netdudes.data_query.query_builder_builder.factory:
+        class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\BuilderFactory"
+        arguments: [@doctrine.orm.entity_manager]
+
+    netdudes.data_query.data_source.driver.doctrine:
+        class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver"
+        arguments: [@netdudes.data_query.query_builder_builder.factory]
+
+    netdudes.data_query.data_source.choices_builder:
+        class: Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder
+        arguments: [@doctrine.orm.entity_manager]
+
+    netdudes.data_query.data_source.factory:
+        class: "Netdudes\DataSourceryBundle\DataSource\DataSourceFactory"
+        arguments: [@netdudes.data_query.data_source.driver.doctrine, @netdudes.data_query.data_source.builder.factory]
+
+    netdudes.data_query.data_source.builder.factory:
+        class: "Netdudes\DataSourceryBundle\DataSource\DataSourceBuilderFactory"
+        arguments: [@netdudes.data_query.data_source.choices_builder]
