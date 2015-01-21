@@ -2,8 +2,6 @@
 
 namespace Netdudes\DataSourceryBundle\Query;
 
-use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
-use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\Util\AbstractArrayAccessibleCollection;
 
 /**
