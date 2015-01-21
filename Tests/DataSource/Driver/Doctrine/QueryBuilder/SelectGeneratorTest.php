@@ -13,7 +13,7 @@ use Netdudes\DataSourceryBundle\Query\Query;
 class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Auto\SelectGenerator::getSelectFieldMap
+     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\SelectGenerator::getSelectFieldMap
      */
     public function testGetSelectFieldMap()
     {
@@ -33,7 +33,7 @@ class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Auto\SelectGenerator::generate
+     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\SelectGenerator::generate
      */
     public function testGenerate()
     {

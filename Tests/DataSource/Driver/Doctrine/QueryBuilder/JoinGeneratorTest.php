@@ -10,7 +10,7 @@ use Netdudes\DataSourceryBundle\Query\Query;
 class JoinGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers Netdudes\DataSourceryBundleDataSource\Auto\JoinGenerator::generate
+     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\JoinGenerator::generate
      */
     public function testGenerate()
     {

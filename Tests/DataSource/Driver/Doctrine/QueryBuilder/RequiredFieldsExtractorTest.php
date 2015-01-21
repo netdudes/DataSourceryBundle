@@ -14,7 +14,7 @@ use Netdudes\DataSourceryBundle\Query\SortCondition;
 class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Auto\RequiredFieldsExtractor::extractRequiredFields
+     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\RequiredFieldsExtractor::extractRequiredFields
      */
     public function testExtractRequiredFields()
     {
