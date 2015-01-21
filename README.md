@@ -2,6 +2,9 @@
 [![Build Status](https://travis-ci.org/netdudes/DataSourceryBundle.svg?branch=master)](https://travis-ci.org/netdudes/DataSourceryBundle)
 [![Code Climate](https://codeclimate.com/github/netdudes/DataSourceryBundle/badges/gpa.svg)](https://codeclimate.com/github/netdudes/DataSourceryBundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/5b739d71-fe46-468f-b1b0-667af8411a1c/mini.png)](https://insight.sensiolabs.com/projects/5b739d71-fe46-468f-b1b0-667af8411a1c)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/netdudes/DataSourceryBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/netdudes/DataSourceryBundle/?branch=master)
+
+[![Latest Stable Version](https://poser.pugx.org/netdudes/data-sourcery-bundle/v/stable.svg)](https://packagist.org/packages/netdudes/data-sourcery-bundle) [![Total Downloads](https://poser.pugx.org/netdudes/data-sourcery-bundle/downloads.svg)](https://packagist.org/packages/netdudes/data-sourcery-bundle) [![Latest Unstable Version](https://poser.pugx.org/netdudes/data-sourcery-bundle/v/unstable.svg)](https://packagist.org/packages/netdudes/data-sourcery-bundle) [![License](https://poser.pugx.org/netdudes/data-sourcery-bundle/license.svg)](https://packagist.org/packages/netdudes/data-sourcery-bundle)
 
 DataSourceryBundle is a neat tool to handle building and performing complex queries on data sets, including support for natural-language queries and safe handling of user provided query parameters.
 
