@@ -1,6 +1,7 @@
 # Netdudes\DataSourceryBundle
 [![Build Status](https://travis-ci.org/netdudes/DataSourceryBundle.svg?branch=master)](https://travis-ci.org/netdudes/DataSourceryBundle)
 [![Code Climate](https://codeclimate.com/github/netdudes/DataSourceryBundle/badges/gpa.svg)](https://codeclimate.com/github/netdudes/DataSourceryBundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/5b739d71-fe46-468f-b1b0-667af8411a1c/mini.png)](https://insight.sensiolabs.com/projects/5b739d71-fe46-468f-b1b0-667af8411a1c)
 
 DataSourceryBundle is a neat tool to handle building and performing complex queries on data sets, including support for natural-language queries and safe handling of user provided query parameters.
 
