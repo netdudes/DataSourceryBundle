@@ -18,6 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
+        $treeBuilder->root('netdudes_data_sourcery');
         return $treeBuilder;
     }
 }
