@@ -1,4 +1,6 @@
 # Netdudes\DataSourceryBundle
+[![Build Status](https://travis-ci.org/netdudes/DataSourceryBundle.svg?branch=master)](https://travis-ci.org/netdudes/DataSourceryBundle)
+[![Code Climate](https://codeclimate.com/github/netdudes/DataSourceryBundle/badges/gpa.svg)](https://codeclimate.com/github/netdudes/DataSourceryBundle)
 
 DataSourceryBundle is a neat tool to handle building and performing complex queries on data sets, including support for natural-language queries and safe handling of user provided query parameters.
 
