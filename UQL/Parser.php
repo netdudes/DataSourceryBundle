@@ -69,7 +69,7 @@ class Parser
 
         // Make sure we are at the end of the UQL
         $token = $this->nextToken();
-        if ($token == false) {
+        if ($token === false) {
             return $concatenation;
         }
 

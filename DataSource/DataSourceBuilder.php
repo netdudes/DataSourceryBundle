@@ -1,7 +1,6 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource;
 
-use Netdudes\DataSourceryBundle\DataSource\Driver\DriverInterface;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Exception\InvalidDataTypeException;
 use Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder;
@@ -45,11 +44,6 @@ class DataSourceBuilder implements DataSourceBuilderInterface
      * @var ChoicesBuilder
      */
     private $choicesBuilder;
-
-    /**
-     * @var DriverInterface
-     */
-    private $driver;
 
     /**
      * @var DataSourceFactoryInterface

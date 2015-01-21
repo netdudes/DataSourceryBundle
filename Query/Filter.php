@@ -35,47 +35,6 @@ class Filter extends AbstractArrayAccessibleCollection implements \JsonSerializa
     private $conditionType = self::CONDITION_TYPE_AND;
 
     /**
-     * Helper method:
-     * Build a filter collection from a full-text search term and a column definition collection
-     *
-     * @param DataSourceInterface $dataSource
-     * @param string              $searchTerm
-     *
-     * @deprecated The generation of complex filters should not be a concern of the filter itself. This method should be avoided and phased out.
-     *
-     * TODO: Remove this method and replace it with an explicit full-text search functionality or an external mechanism to generate this filters.
-     *
-     * @return array|Filter
-     */
-    public static function createFromFullTextSearch(DataSourceInterface $dataSource, $searchTerm)
-    {
-        // Build a filter collection
-        $filterDefinition = new self();
-        $searchTerm = "%$searchTerm%";
-
-        // Fill in with filters for every searchable column
-        $dataSourceElements = $dataSource->getFields();
-        foreach ($dataSourceElements as $dataSourceElement) {
-            $dataSourceElementSupportsLike = $dataSourceElement->getDataType()->supports(FilterCondition::METHOD_STRING_LIKE);
-            // TODO: This is necessary to prevent elements from a QueryBuilderDataSource being used in full text search when they don't point to any field.
-            // THIS IS A HACK. Should be solved when this whole method is removed.
-            $dataSourceElementIsEntityField =
-                $dataSourceElement instanceof Field ?
-                    (bool) ($dataSourceElement->getDatabaseFilterQueryField()) :
-                    true;
-            if ($dataSourceElementSupportsLike && $dataSourceElementIsEntityField) {
-                $filter = new FilterCondition($dataSourceElement->getUniqueName(), FilterCondition::METHOD_STRING_LIKE, $searchTerm);
-                $filterDefinition[] = $filter;
-            }
-        }
-
-        // Set the filter collection to OR
-        $filterDefinition->setConditionType(Filter::CONDITION_TYPE_OR);
-
-        return $filterDefinition;
-    }
-
-    /**
      * Create a FilterDefinition from a deserialized compact exchange JSON filters.
      * This wil recursively call itself to unpack the whole filter tree.
      *

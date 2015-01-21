@@ -64,17 +64,18 @@ class Builder
      */
     public function __construct(DataSourceInterface $dataSource, EntityManager $entityManager)
     {
+        $this->dataSource = $dataSource;
+        $this->entityManager = $entityManager;
+
         $fields = $dataSource->getFields();
         $transformers = $dataSource->getTransformers();
-        $this->entityManager = $entityManager;
-        // TODO: Fully dependency inject through some pattern (factory of factories ?) that hides the dependencies from the end-developer's DataSource
+
         $this->requiredFieldsExtractor = new RequiredFieldsExtractor($fields, $transformers);
         $this->joinGenerator = new JoinGenerator($fields, $this->getFromAlias(), $this->requiredFieldsExtractor);
         $this->selectGenerator = new SelectGenerator($fields, $this->getFromAlias(), $this->joinGenerator, $this->requiredFieldsExtractor);
         $this->filterer = new Filterer();
         $this->sorter = new Sorter();
         $this->paginator = new Paginator();
-        $this->dataSource = $dataSource;
     }
 
     /**

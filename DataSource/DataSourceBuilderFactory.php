@@ -1,7 +1,6 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource;
 
-use Netdudes\DataSourceryBundle\DataSource\Driver\DriverInterface;
 use Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
