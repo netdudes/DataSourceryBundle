@@ -5,7 +5,8 @@ use Netdudes\DataSourceryBundle\DataSource\Driver\DriverInterface;
 use Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class DataSourceBuilderFactory {
+class DataSourceBuilderFactory
+{
 
     /**
      * @var ChoicesBuilder

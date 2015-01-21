@@ -2,7 +2,6 @@
 
 namespace Netdudes\DataSourceryBundle\DataType;
 
-
 abstract class AbstractDataType implements DataTypeInterface
 {
     /**

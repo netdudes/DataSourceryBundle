@@ -2,7 +2,6 @@
 
 namespace Netdudes\DataSourceryBundle\Query;
 
-
 class Query implements QueryInterface
 {
     protected $filter;

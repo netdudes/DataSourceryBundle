@@ -2,7 +2,6 @@
 
 namespace Netdudes\DataSourceryBundle\Query;
 
-
 interface QueryInterface
 {
     /**
