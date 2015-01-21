@@ -177,7 +177,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         // Case 1: Returns a group
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchGroup'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -188,7 +188,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         // Case 2: Returns an assertion
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchGroup', 'matchAssertion'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -202,7 +202,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         // Case 3: Neither, returns false
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchGroup', 'matchAssertion'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -222,7 +222,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         // Case 1: Correct
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchConcatenation'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -285,7 +285,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         // Case 1: There is no statement at the beginning
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchStatement'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -301,7 +301,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         // Case 2: There is only one element and no logic.
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchStatement', 'matchLogic'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -316,7 +316,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         // Case 3: There isn't a statement after the first logic
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchStatement', 'matchLogic', 'getCurrentToken'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -353,7 +353,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
         // Case 4: Mismatching logics in concatenation
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchStatement', 'matchLogic', 'getCurrentToken'])
             ->getMock();
         $mockParser->expects($this->any())
@@ -397,7 +397,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         // Case 5: Correct
 
-        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Interpreter\Parser')
+        $mockParser = $this->getMockBuilder('Netdudes\DataSourceryBundle\UQL\Parser')
             ->setMethods(['matchStatement', 'matchLogic', 'getCurrentToken'])
             ->getMock();
         $mockParser->expects($this->any())
