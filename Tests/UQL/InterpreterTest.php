@@ -1,16 +1,16 @@
 <?php
 
-namespace Netdudes\TableBundle\Tests\UQL\Interpreter;
+namespace Netdudes\DataSourceryBundle\Tests\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTAssertion;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTGroup;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Interpreter;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\InterpreterFactory;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
+use Netdudes\DataSourceryBundle\UQL\Interpreter;
+use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
 
 class InterpreterTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Netdudes\TableBundle\Tests\UQL\Interpreter;
+namespace Netdudes\DataSourceryBundle\Tests\UQL;
 
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTArray;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTAssertion;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTGroup;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Exception\UQLSyntaxError;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Lexer;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Parser;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTArray;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
+use Netdudes\DataSourceryBundle\UQL\Exception\UQLSyntaxError;
+use Netdudes\DataSourceryBundle\UQL\Lexer;
+use Netdudes\DataSourceryBundle\UQL\Parser;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {

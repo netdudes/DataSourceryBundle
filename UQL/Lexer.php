@@ -1,8 +1,8 @@
 <?php
 
-namespace Netdudes\DataSourceryBundle\UQL\Interpreter;
+namespace Netdudes\DataSourceryBundle\UQL;
 
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Exception\UqlLexerException;
+use Netdudes\DataSourceryBundle\UQL\Exception\UqlLexerException;
 
 /**
  * Class Lexer

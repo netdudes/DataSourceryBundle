@@ -1,8 +1,8 @@
 <?php
 
-namespace Netdudes\DataSourceryBundle\UQL\Interpreter\AST;
+namespace Netdudes\DataSourceryBundle\UQL\AST;
 
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Exception\UQLInterpreterException;
+use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 
 class ASTFunctionCall
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Netdudes\DataSourceryBundle\UQL\Interpreter;
+namespace Netdudes\DataSourceryBundle\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer;

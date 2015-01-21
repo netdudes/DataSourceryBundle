@@ -2,7 +2,7 @@
 
 namespace Netdudes\DataSourceryBundle\Query;
 
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Interpreter;
+use Netdudes\DataSourceryBundle\UQL\Interpreter;
 
 /**
  * Defines a filter

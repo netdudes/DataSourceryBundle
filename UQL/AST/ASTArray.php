@@ -1,6 +1,6 @@
 <?php
 
-namespace Netdudes\DataSourceryBundle\UQL\Interpreter\AST;
+namespace Netdudes\DataSourceryBundle\UQL\AST;
 
 class ASTArray
 {

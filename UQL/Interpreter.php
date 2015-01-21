@@ -1,17 +1,17 @@
 <?php
 
-namespace Netdudes\DataSourceryBundle\UQL\Interpreter;
+namespace Netdudes\DataSourceryBundle\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTArray;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTAssertion;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTFunctionCall;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\AST\ASTGroup;
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Exception\UQLInterpreterException;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTArray;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTFunctionCall;
+use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
+use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 
 /**
  * Class Interpreter

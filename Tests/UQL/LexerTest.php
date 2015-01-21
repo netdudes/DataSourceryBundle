@@ -1,8 +1,8 @@
 <?php
 
-namespace Netdudes\TableBundle\Tests\UQL\Interpreter;
+namespace Netdudes\DataSourceryBundle\Tests\UQL;
 
-use Netdudes\DataSourceryBundle\UQL\Interpreter\Lexer;
+use Netdudes\DataSourceryBundle\UQL\Lexer;
 
 class LexerTest extends \PHPUnit_Framework_TestCase
 {
@@ -75,7 +75,7 @@ class LexerTest extends \PHPUnit_Framework_TestCase
         // Try matching them all again in uppercase
         foreach ($validStringToTokenArray as $string => $token) {
             $string = strtoupper($string);
-            $tokenResult = \Netdudes\DataSourceryBundle\UQL\Interpreter\Lexer::matchToken($string, 0);
+            $tokenResult = \Netdudes\DataSourceryBundle\UQL\Lexer::matchToken($string, 0);
             $this->assertEquals($token, $tokenResult['token'], "Failed to match $string to token $token");
         }
 
