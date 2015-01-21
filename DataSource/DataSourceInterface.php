@@ -33,7 +33,7 @@ interface DataSourceInterface
     /**
      * Return list of data source fields available for the data source
      *
-     * @return FieldInterface
+     * @return FieldInterface[]
      */
     public function getFields();
 

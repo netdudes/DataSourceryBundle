@@ -17,13 +17,13 @@ class DataSourceryBundleExtensionServicePass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('netdudes_data_query.extension_container')) {
+        if (!$container->hasDefinition('netdudes_data_sourcery.extension_container')) {
             return;
         }
 
-        $extensionContainer = $container->getDefinition('netdudes_data_query.extension_container');
+        $extensionContainer = $container->getDefinition('netdudes_data_sourcery.extension_container');
 
-        foreach ($container->findTaggedServiceIds('netdudes_data_query.extension') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('netdudes_data_sourcery.extension') as $id => $attributes) {
             $extensionContainer->addMethodCall('addExtension', [new Reference($id)]);
         }
     }

@@ -1,20 +1,35 @@
 services:
-    netdudes.data_query.query_builder_builder.factory:
+    netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory:
         class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\BuilderFactory"
         arguments: [@doctrine.orm.entity_manager]
 
-    netdudes.data_query.data_source.driver.doctrine:
+    netdudes_data_sourcery.data_source.driver.doctrine:
         class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver"
-        arguments: [@netdudes.data_query.query_builder_builder.factory]
+        arguments: [@netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory]
 
-    netdudes.data_query.data_source.choices_builder:
+    netdudes_data_sourcery.data_source.choices_builder:
         class: Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder
         arguments: [@doctrine.orm.entity_manager]
 
-    netdudes.data_query.data_source.factory:
+    netdudes_data_sourcery.data_source.factory:
         class: "Netdudes\DataSourceryBundle\DataSource\DataSourceFactory"
-        arguments: [@netdudes.data_query.data_source.driver.doctrine, @netdudes.data_query.data_source.builder.factory]
+        arguments: [@netdudes_data_sourcery.data_source.driver.doctrine, @netdudes_data_sourcery.data_source.builder.factory]
 
-    netdudes.data_query.data_source.builder.factory:
+    netdudes_data_sourcery.data_source.builder.factory:
         class: "Netdudes\DataSourceryBundle\DataSource\DataSourceBuilderFactory"
-        arguments: [@netdudes.data_query.data_source.choices_builder]
+        arguments: [@netdudes_data_sourcery.data_source.choices_builder]
+
+    netdudes_data_sourcery.uql.interpreter.factory:
+        class: Netdudes\DataSourceryBundle\UQL\InterpreterFactory
+        arguments:
+            - "@netdudes_data_sourcery.extension_container"
+
+    netdudes_data_sourcery.extension.built_in_functions:
+        class: Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension
+        arguments:
+            - "@security.context"
+        tags:
+            - { name: netdudes_data_sourcery.extension }
+
+    netdudes_data_sourcery.extension_container:
+        class: Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer

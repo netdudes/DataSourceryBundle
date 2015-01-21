@@ -28,7 +28,7 @@ You can get the building block of the library, the `DataSource`, from a builder.
 
 ```php
 $dataSourceBuilder = $container
-    ->get('netdudes.data_query.data_source.factory')
+    ->get('netdudes_data_sourcery.data_source.factory')
     ->createBuilder('My\Entities\User');
 ```
 
@@ -69,7 +69,7 @@ class MyNiceDataSourceConfig implements DataSourceConfigurationInterface
 }
 
 $dataSource = $container
-	->get('netdudes.data_query.data_source.factory')
+	->get('netdudes_data_sourcery.data_source.factory')
 	->createFromConfiguration(new MyNiceDataSourceConfig());
 ```
 
@@ -91,7 +91,7 @@ $query->setFilter($filter);
 Alternatively you can use the built in parser for the system's language, UQL:
 
 ```php
-$uqlInterpreter = $container->get('netdudes_table.uql.interpreter.factory')->create($dataSource);
+$uqlInterpreter = $container->get('netdudes_data_sourcery.uql.interpreter.factory')->create($dataSource);
 $filter = $uqlInterpreter->generateFilters('username != "admin"');
 
 $query->setFilter($filter);
