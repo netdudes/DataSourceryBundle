@@ -5,7 +5,7 @@ services:
 
     netdudes_data_sourcery.data_source.driver.doctrine:
         class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver"
-        arguments: [@netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory]
+        arguments: [@netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory, @doctrine.orm.entity_manager]
 
     netdudes_data_sourcery.data_source.choices_builder:
         class: Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder
