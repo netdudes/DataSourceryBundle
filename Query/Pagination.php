@@ -40,7 +40,7 @@ class Pagination
     public function __construct($page = 0, $count = self::DEFAULT_COUNT)
     {
         $this->page = $page;
-        $this->count = $count;
+        $this->count = $count > 0 ? $count : self::DEFAULT_COUNT;
 
         // The item offset form the beginning of the item collection
         $this->offset = $page * $count;
@@ -84,7 +84,7 @@ class Pagination
      */
     public function setCount($count)
     {
-        $this->count = $count;
+        $this->count = $count > 0 ? $count : self::DEFAULT_COUNT;
         $this->offset = $this->page * $this->count;
     }
 }
