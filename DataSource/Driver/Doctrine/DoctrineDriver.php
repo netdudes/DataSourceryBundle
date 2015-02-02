@@ -1,7 +1,6 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
@@ -27,18 +26,11 @@ class DoctrineDriver implements DriverInterface
     private $queryBuilderBuilderFactory;
 
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
      * @param BuilderFactory $queryBuilderBuilderFactory
-     * @param EntityManager  $entityManager
      */
-    public function __construct(BuilderFactory $queryBuilderBuilderFactory, EntityManager $entityManager)
+    public function __construct(BuilderFactory $queryBuilderBuilderFactory)
     {
         $this->queryBuilderBuilderFactory = $queryBuilderBuilderFactory;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -57,14 +49,14 @@ class DoctrineDriver implements DriverInterface
      */
     public function getRecordCount(DataSourceInterface $dataSource, QueryInterface $query)
     {
+        $queryBuilder = $this->getQueryBuilder($dataSource, $query);
+        $queryBuilder->select('count(DISTINCT ' . $queryBuilder->getDQLPart('from')[0]->getAlias() . ')');
+        $queryBuilder->resetDQLPart('groupBy');
+        $queryBuilder->resetDQLPart('orderBy');
+        $queryBuilder->setMaxResults(null);
+        $queryBuilder->setFirstResult(null);
         try {
-            return $this
-                ->entityManager
-                ->createQueryBuilder()
-                ->select('count(e)')
-                ->from($dataSource->getEntityClass(), 'e')
-                ->getQuery()
-                ->getSingleScalarResult();
+            return $queryBuilder->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }
