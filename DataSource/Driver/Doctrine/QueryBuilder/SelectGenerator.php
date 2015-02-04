@@ -7,6 +7,7 @@ use Netdudes\DataSourceryBundle\Query\Query;
 
 class SelectGenerator
 {
+
     /**
      * @var JoinGenerator
      */
@@ -99,18 +100,23 @@ class SelectGenerator
         return $this->selectFieldMapCache[$uniqueId];
     }
 
+    /**
+     * @param Query $query
+     *
+     * @return array
+     */
     public function getUniqueNameToSelectFieldMap(Query $query)
     {
         $selectFieldMap = $this->getSelectFieldMap($query);
         $uniqueNameToSelectFieldMap = [];
-        foreach ($selectFieldMap as $alias => $selectField) {
-            foreach ($this->queryBuilderDataSourceFields as $field) {
-                if ($alias == $field->getDatabaseSelectAlias()) {
-                    $uniqueNameToSelectFieldMap[$field->getUniqueName()] = $selectField;
-                    continue 2;
-                }
+        foreach ($this->queryBuilderDataSourceFields as $field) {
+            $alias = $field->getDatabaseSelectAlias();
+            if (is_array($alias)) {
+                $alias = str_replace('.', '_', $field->getDatabaseFilterQueryField());
             }
-            throw new \Exception("Field with alias $alias not found in select field map");
+            if (array_key_exists($alias, $selectFieldMap)) {
+                $uniqueNameToSelectFieldMap[$field->getUniqueName()] = $selectFieldMap[$alias];
+            }
         }
 
         return $uniqueNameToSelectFieldMap;
@@ -139,7 +145,7 @@ class SelectGenerator
             }
             $fieldIdentifier = $element->getDatabaseSelectAlias();
             if (is_array($fieldIdentifier)) {
-                continue;
+                $fieldIdentifier = str_replace('.', '_', $element->getDatabaseFilterQueryField());
             }
             $fieldParts = explode('.', $element->getDatabaseFilterQueryField());
             if (count($fieldParts) === 1) {
