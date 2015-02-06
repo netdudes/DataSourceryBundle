@@ -1,8 +1,9 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder;
 
-use Doctrine\DBAL\Query\QueryBuilder;
+
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Events\GenerateJoinsEvent;
