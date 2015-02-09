@@ -3,6 +3,7 @@ namespace Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder;
 
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver;

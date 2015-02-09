@@ -79,7 +79,7 @@ class SelectGenerator
         }
 
         if (empty($selectStatements)) {
-            return null;
+            return new Select();
         }
 
         return new Select($selectStatements);

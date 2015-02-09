@@ -20,7 +20,7 @@ class GenerateSelectsEvent extends Event
      * @param $select
      * @param $fromAlias
      */
-    public function __construct($select, $fromAlias)
+    public function __construct(Select $select, $fromAlias)
     {
         $this->select = $select;
         $this->fromAlias = $fromAlias;
