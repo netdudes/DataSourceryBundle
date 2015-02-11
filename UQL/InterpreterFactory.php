@@ -13,11 +13,18 @@ class InterpreterFactory
     private $extensionContainer;
 
     /**
-     * @param TableBundleExtensionContainer $extensionContainer
+     * @var bool
      */
-    public function __construct(TableBundleExtensionContainer $extensionContainer)
+    private $caseSensitive;
+
+    /**
+     * @param TableBundleExtensionContainer $extensionContainer
+     * @param bool                          $caseSensitive
+     */
+    public function __construct(TableBundleExtensionContainer $extensionContainer, $caseSensitive = true)
     {
         $this->extensionContainer = $extensionContainer;
+        $this->caseSensitive = $caseSensitive;
     }
 
     /**
@@ -29,6 +36,6 @@ class InterpreterFactory
      */
     public function create(DataSourceInterface $dataSource)
     {
-        return new Interpreter($this->extensionContainer, $dataSource);
+        return new Interpreter($this->extensionContainer, $dataSource, $this->caseSensitive);
     }
 }

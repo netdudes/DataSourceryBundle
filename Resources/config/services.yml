@@ -23,6 +23,7 @@ services:
         class: Netdudes\DataSourceryBundle\UQL\InterpreterFactory
         arguments:
             - "@netdudes_data_sourcery.extension_container"
+            - %netdudes_data_sourcery.uql.case_sensitive%
 
     netdudes_data_sourcery.extension.built_in_functions:
         class: Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension

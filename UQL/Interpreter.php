@@ -2,6 +2,7 @@
 
 namespace Netdudes\DataSourceryBundle\UQL;
 
+use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer;
@@ -37,23 +38,29 @@ class Interpreter
     private $dataSourceElements;
 
     /**
+     * @var bool
+     */
+    private $caseSensitive;
+
+    /**
      * Constructor needs the columns descriptor to figure out appropriate filtering methods
      * and translate identifiers.
      *
-     * @param TableBundleExtensionContainer $extensionContainer
-     * @param \Netdudes\DataSourceryBundle\DataSource\DataSourceInterface           $dataSource
-     *
+     * @param TableBundleExtensionContainer                               $extensionContainer
+     * @param \Netdudes\DataSourceryBundle\DataSource\DataSourceInterface $dataSource
+     * @param bool                                                        $caseSensitive
      */
-    public function __construct(TableBundleExtensionContainer $extensionContainer, DataSourceInterface $dataSource)
+    public function __construct(TableBundleExtensionContainer $extensionContainer, DataSourceInterface $dataSource, $caseSensitive = true)
     {
         $this->extensionContainer = $extensionContainer;
         $this->dataSource = $dataSource;
+        $this->caseSensitive = $caseSensitive;
 
         // Cache an array of data sources (name => object pairs) for reference during the interpretation
         $this->dataSourceElements = array_combine(
             array_map(
-                function (FieldInterface $element) {
-                    return $element->getUniqueName();
+                function (FieldInterface $element) use ($caseSensitive) {
+                    return $caseSensitive ? $element->getUniqueName() : strtolower($element->getUniqueName());
                 },
                 $this->dataSource->getFields()
             ),
@@ -151,13 +158,8 @@ class Interpreter
 
             return $filterDefinition;
         } elseif ($astSubtree instanceof ASTAssertion) {
-            // Get the associated data source element
-            if (!isset($this->dataSourceElements[$astSubtree->getIdentifier()])) {
-                throw new UQLInterpreterException('Unknown filtering element "' . $astSubtree->getIdentifier() . '"');
-            }
-
-            $dataSourceElement = $this->dataSourceElements[$astSubtree->getIdentifier()];
-
+            
+            $dataSourceElement = $this->matchDataSourceElement($astSubtree->getIdentifier());
             $method = $this->translateOperator($astSubtree->getOperator(), $dataSourceElement);
             if ($astSubtree->getValue() instanceof ASTFunctionCall) {
                 $value = $this->callFunction($astSubtree->getValue());
@@ -310,5 +312,24 @@ class Interpreter
         }
 
         return $array;
+    }
+
+    /**
+     * @param $identifier
+     *
+     * @return Field
+     * @throws UQLInterpreterException
+     */
+    private function matchDataSourceElement($identifier)
+    {
+        if (!$this->caseSensitive) {
+            $identifier = strtolower($identifier);
+        }
+
+        if (!isset($this->dataSourceElements[$identifier])) {
+            throw new UQLInterpreterException('Unknown filtering element "' . $identifier . '"');
+        }
+
+        return $this->dataSourceElements[$identifier];
     }
 }
