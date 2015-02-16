@@ -148,11 +148,18 @@ class Autocomplete
 
     private function splitInput($uql)
     {
-        $parts = explode(' ', $uql);
-        $lastWord = array_pop($parts);
-        if (empty($lastWord)) {
+        preg_match_all('/((?:\"[^\"]*\")|(?:\'[^\']*\')|[^\s]+)/', $uql, $parts);
+        $lastNonWhitespaceToken = array_pop($parts[0]);
+        $split = explode($lastNonWhitespaceToken, $uql);
+        $end = array_pop($split);
+        if (strlen($end) > 0) {
             $lastWord = null;
+            $existingUql = implode($lastNonWhitespaceToken, $split) . $lastNonWhitespaceToken;
+        } else {
+            $lastWord = $lastNonWhitespaceToken;
+            $existingUql = implode($lastNonWhitespaceToken, $split);
         }
-        return [implode(' ', $parts), $lastWord];
+
+        return [$existingUql, $lastWord];
     }
 }

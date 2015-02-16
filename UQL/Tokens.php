@@ -46,13 +46,13 @@ class Tokens {
         'ARRAY_END' => ['T_ARRAY_CLOSE'],
         'ARRAY_SEPARATOR' => ['T_ARRAY_SEPARATOR'],
         'OPERATOR' => [
+            'T_OP_EQ',
             'T_OP_NEQ',
-            'T_OP_LTE',
-            'T_OP_GTE',
             'T_OP_LT',
             'T_OP_GT',
+            'T_OP_LTE',
+            'T_OP_GTE',
             'T_OP_LIKE',
-            'T_OP_EQ',
             'T_OP_IN',
         ],
         'LOGIC' => [
