@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class ChoicesBuilder
 {
+
     /**
      * @var EntityManager
      */
@@ -34,7 +35,8 @@ class ChoicesBuilder
                 $repository = $this->entityManager->getRepository($choicesConfiguration['repository']);
             }
             $choicesField = $choicesConfiguration['field'];
-            $choices = $this->getChoicesFromRepository($repository, $choicesField);
+            $choicesSort = isset($choicesConfiguration['sort']) ? $choicesConfiguration['sort'] : null;
+            $choices = $this->getChoicesFromRepository($repository, $choicesField, $choicesSort);
         } elseif (is_callable($choicesConfiguration)) {
             // Choices is a callable. It will generate the choices array.
             $choices = $choicesConfiguration();
@@ -56,14 +58,24 @@ class ChoicesBuilder
      * @param EntityRepository $repository
      * @param                  $property
      *
+     * @param null             $sortOrder
+     *
      * @return array|null
      */
-    private function getChoicesFromRepository(EntityRepository $repository, $property)
+    private function getChoicesFromRepository(EntityRepository $repository, $property, $sortOrder = null)
     {
-        $results = $repository->createQueryBuilder('entity')
-            ->select('entity.' . $property)
-            ->getQuery()
-            ->getArrayResult();
+        $query = $repository->createQueryBuilder('entity')
+            ->select('entity.' . $property);
+
+        if (!is_null($sortOrder)) {
+            $query = $query
+                ->orderBy('entity.' . $property, $sortOrder);
+        }
+
+        $results =
+            $query
+                ->getQuery()
+                ->getArrayResult();
         $choices = [];
         foreach ($results as $key => $value) {
             $choices[$value[$property]] = $value[$property];
