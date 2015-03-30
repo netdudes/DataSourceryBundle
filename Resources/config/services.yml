@@ -34,14 +34,3 @@ services:
 
     netdudes_data_sourcery.extension_container:
         class: Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer
-
-    netdudes_data_sourcery.uql.autocomplete.prediction.engine:
-        class: Netdudes\DataSourceryBundle\UQL\Autocomplete\PredictionEngine
-
-    netdudes_data_sourcery.uql.autocomplete.factory:
-        class: Netdudes\DataSourceryBundle\UQL\Autocomplete\AutocompleteFactory
-        arguments:
-            - @netdudes_data_sourcery.extension_container
-            - @netdudes_data_sourcery.uql.autocomplete.prediction.engine
-            - @netdudes_data_sourcery.data_source.factory
-            - %netdudes_data_sourcery.uql.case_sensitive%
