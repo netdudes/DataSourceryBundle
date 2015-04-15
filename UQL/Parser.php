@@ -37,7 +37,7 @@ class Parser
 
     private $tokenIndex;
 
-    private $tokenStream;
+    private $tokenStream = [];
 
     public function __construct()
     {

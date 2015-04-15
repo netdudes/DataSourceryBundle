@@ -95,6 +95,7 @@ class Tokens
 
     private static $operatorTokenAssociations = [
         "T_OP_EQ" => ["STRING_EQ", "NUMERIC_EQ", "DATETIME_EQ"],
+        "T_OP_NEQ" => ["STRING_NEQ", "NUMERIC_NEQ", "DATETIME_NEQ"],
         "T_OP_GTE" => ["NUMERIC_GTE", "DATETIME_GTE"],
         "T_OP_GT" => ["NUMERIC_GT", "DATETIME_GT"],
         "T_OP_LTE" => ["NUMERIC_LTE", "DATETIME_LTE"],
