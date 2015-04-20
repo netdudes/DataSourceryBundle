@@ -75,21 +75,21 @@ class Tokens
     ];
 
     private static $operators = [
-        "STRING_NEQ" => ["!=", "<>", "not", "is not"],
-        "NUMERIC_NEQ" => ["!=", "<>", "not", "is not"],
+        "STRING_NEQ" => ["!=", "not", "is not"],
+        "NUMERIC_NEQ" => ["!=", "not", "is not"],
         "DATETIME_NEQ" => ["!=", "<>", "not", "is not"],
-        "NUMERIC_LTE" => ["<=", "less or equal to"],
-        "DATETIME_LTE" => ["<=", "before or on"],
-        "NUMERIC_GTE" => [">=", "greater or equal to", "greater or equal than"],
-        "DATETIME_GTE" => [">=", "after or on"],
+        "NUMERIC_LTE" => ["<="],
+        "DATETIME_LTE" => ["<="],
+        "NUMERIC_GTE" => [">="],
+        "DATETIME_GTE" => [">="],
         "NUMERIC_LT" => ["<", "less than"],
         "DATETIME_LT" => ["<", "before"],
-        "NUMERIC_GT" => [">", "greater than", "more than"],
+        "NUMERIC_GT" => [">", "more than"],
         "DATETIME_GT" => [">", "after"],
-        "STRING_LIKE" => ["~", "like", "is like"],
-        "STRING_EQ" => ["=", "==", "equal to", "equals", "is"],
-        "NUMERIC_EQ" => ["=", "==", "equal to", "equals", "is"],
-        "DATETIME_EQ" => ["=", "==", "on", "is", "at"],
+        "STRING_LIKE" => ["~", "like"],
+        "STRING_EQ" => ["=", "equals", "is"],
+        "NUMERIC_EQ" => ["=", "equals", "is"],
+        "DATETIME_EQ" => ["=", "on", "is", "at"],
         "IN" => ["in"]
     ];
 
