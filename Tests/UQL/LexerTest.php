@@ -23,7 +23,6 @@ class LexerTest extends \PHPUnit_Framework_TestCase
             "less than" => 'T_OP_LT',
             "before" => 'T_OP_LT',
             "=" => 'T_OP_EQ',
-            "equal to" => 'T_OP_EQ',
             "equals" => 'T_OP_EQ',
             "on" => 'T_OP_EQ',
             "is" => 'T_OP_EQ',
