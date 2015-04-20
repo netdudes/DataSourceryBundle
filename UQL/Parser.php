@@ -6,6 +6,8 @@ use Netdudes\DataSourceryBundle\UQL\AST\ASTArray;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTFunctionCall;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
+use Netdudes\DataSourceryBundle\UQL\Exception\Semantic\UqlUnexpectedEndOfExpressionException;
+use Netdudes\DataSourceryBundle\UQL\Exception\Semantic\UqlUnexpectedTokenException;
 use Netdudes\DataSourceryBundle\UQL\Exception\UQLSyntaxError;
 
 /**
@@ -35,7 +37,7 @@ class Parser
 
     private $tokenIndex;
 
-    private $tokenStream;
+    private $tokenStream = [];
 
     public function __construct()
     {
@@ -73,7 +75,7 @@ class Parser
             return $concatenation;
         }
 
-        $this->throwUnexpectedTokenSyntaxError("Logic operator or end of UQL expected after statement in first-level concatenation");
+        $this->throwUnexpectedTokenSyntaxError(['LOGIC'], "Logic operator or end of UQL expected after statement in first-level concatenation");
     }
 
     /**
@@ -88,7 +90,7 @@ class Parser
         $firstStatement = $this->matchStatement();
 
         if ($firstStatement === false) {
-            $this->throwSyntaxError('Expected statement at beginning of concatenation.');
+            $this->throwUnexpectedTokenSyntaxError(['IDENTIFIER', 'GROUP_START'], 'Expected statement at beginning of concatenation.');
         }
 
         $elements[] = $firstStatement;
@@ -107,7 +109,7 @@ class Parser
             }
             $statement = $this->matchStatement();
             if ($statement === false) {
-                $this->throwSyntaxError('Expected statement after logic operator');
+                $this->throwUnexpectedTokenSyntaxError(['IDENTIFIER', 'GROUP_START'], 'Expected statement after logic operator');
             }
             $elements[] = $statement;
             $logic = $this->matchLogic();
@@ -166,7 +168,7 @@ class Parser
 
         // Check for closed parenthesis. Mismatch is a Syntax Error.
         if ($token['token'] != "T_BRACKET_CLOSE") {
-            $this->throwUnexpectedTokenSyntaxError('Expected T_BRACKET_CLOSE.');
+            $this->throwUnexpectedTokenSyntaxError(['GROUP_END'], 'Expected closing bracket.');
         }
 
         return $concatenation;
@@ -193,7 +195,7 @@ class Parser
 
         if ($operator === false) {
             $this->nextToken(); // MatchOperator rewinds
-            $this->throwUnexpectedTokenSyntaxError('Comparison operator expected after identifier');
+            $this->throwUnexpectedTokenSyntaxError(['OPERATOR'], 'Comparison operator expected after identifier');
         }
 
         $array = $this->matchArray();
@@ -212,7 +214,7 @@ class Parser
         }
 
         if (strpos($literal['token'], 'T_LITERAL') !== 0) {
-            $this->throwUnexpectedTokenSyntaxError('Array, literal or function call expected after comparison operator');
+            $this->throwUnexpectedTokenSyntaxError(['ARRAY_START', 'LITERAL'], 'Array, value or function call expected after comparison operator');
         }
         $literal = $this->transformLiteral($literal);
 
@@ -266,14 +268,14 @@ class Parser
         while ($comma['token'] == "T_ARRAY_SEPARATOR") {
             $element = $this->nextToken();
             if ($element['token'] !== 'T_LITERAL') {
-                throw new UQLSyntaxError("An array must consist of literals");
+                $this->throwUnexpectedTokenSyntaxError(['LITERAL'], "An array must consist of literals");
             }
             $elements[] = $element['match'];
             $comma = $this->nextToken();
         }
         if ($comma['token'] != 'T_ARRAY_CLOSE') {
             // Unterminated array
-            throw new UQLSyntaxError("Unterminated array.");
+           $this->throwUnexpectedTokenSyntaxError(['ARRAY_END'], "An array must end with ']'.");
         }
 
         return new ASTArray($elements);
@@ -367,14 +369,22 @@ class Parser
      *
      * @throws \Exception
      */
-    private function throwUnexpectedTokenSyntaxError($message)
+    private function throwUnexpectedTokenSyntaxError(array $expectedTokenCategories, $message = null)
     {
+        $parsedTokenStream = array_slice($this->tokenStream, 0, $this->tokenIndex + 1);
         if ($this->currentToken() === false) {
-            $messageUnexpected = "Unexpected end of expression. ";
-        } else {
-            $messageUnexpected = 'Unexpected token "' . $this->currentToken()['token'] . ' (' . $this->currentToken()['match'] . ')". ';
+            throw new UqlUnexpectedEndOfExpressionException(
+                $expectedTokenCategories,
+                $parsedTokenStream,
+                $message);
         }
-        $this->throwSyntaxError($messageUnexpected . $message);
+        throw new UqlUnexpectedTokenException(
+            $this->currentToken()['token'],
+            $this->currentToken()['match'],
+            $expectedTokenCategories,
+            $parsedTokenStream,
+            $message
+        );
     }
 
     private function throwSyntaxError($message)

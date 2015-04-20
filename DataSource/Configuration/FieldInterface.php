@@ -3,7 +3,7 @@ namespace Netdudes\DataSourceryBundle\DataSource\Configuration;
 
 use Netdudes\DataSourceryBundle\DataType\DataTypeInterface;
 
-interface FieldInterface
+interface FieldInterface extends \JsonSerializable
 {
     /**
      * @return string
