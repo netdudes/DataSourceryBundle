@@ -78,7 +78,7 @@ class Filter extends AbstractArrayAccessibleCollection implements \JsonSerializa
             $parts[] = $subFilterUql;
         }
 
-        return implode(" " . $this->conditionType . " ", $parts);
+        return implode(" " . strtolower($this->conditionType) . " ", $parts);
     }
 
     /**
