@@ -6,7 +6,7 @@ namespace Netdudes\DataSourceryBundle\Extension\Type;
  * Wraps a definition of a callable defined in an extension,
  * available to the TableBundle to be used in UQL, etc.
  */
-class TableBundleFunctionExtension
+class TableBundleFunctionExtension implements \JsonSerializable
 {
     /**
      * Instance to which this function/method belongs
@@ -104,5 +104,48 @@ class TableBundleFunctionExtension
         }
 
         return $this->name . '(' . implode(', ', $splitStringRepresentation) . str_repeat(']', $optionalArgumentCount) . ')';
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     *
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     *       which is a value of any type other than a resource.
+     */
+    function jsonSerialize()
+    {
+        $json =  [
+            'name' => $this->getName(),
+            'arguments' => [],
+        ];
+
+        $reflection = new \ReflectionMethod($this->instance, $this->method);
+        $methodParameters = $reflection
+            ->getParameters();
+
+        foreach ($methodParameters as $parameter) {
+            $isOptional = $parameter->isOptional();
+            $argument = [
+                'name' => $parameter->getName(),
+                'optional' => $isOptional,
+                'default' => null,
+            ];
+
+            if ($isOptional) {
+                $defaultValue = $parameter->getDefaultValue();
+                if (!is_null($defaultValue)) {
+                    if (is_numeric($defaultValue)) {
+                        $defaultValue = intval($defaultValue);
+                    }
+                    $argument['default'] = $defaultValue;
+                }
+            }
+
+            $json['arguments'][] = $argument;
+        }
+
+        return $json;
     }
 }
