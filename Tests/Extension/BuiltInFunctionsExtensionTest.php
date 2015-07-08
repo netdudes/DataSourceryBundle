@@ -8,18 +8,16 @@ class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testToday()
     {
-        $now = new \DateTime("2012-06-03T22:22:22+0200");
 
-        $context = $this->prophesize('Symfony\Component\Security\Core\SecurityContextInterface');
-        $extension = new BuiltInFunctionsExtension($context->reveal());
+        $extension = $this->getExtension();
 
-        $todayResult = $extension->today(null, $now);
+        $todayResult = $extension->today(null);
         $this->assertSame("2012-06-03T00:00:00+0200", $todayResult, 'The today function result did not produce the expected result');
 
-        $todayResult = $extension->today(-5, $now);
+        $todayResult = $extension->today(-5);
         $this->assertSame("2012-05-29T00:00:00+0200", $todayResult, 'The today function result did not produce the expected result');
 
-        $todayResult = $extension->today(10, $now);
+        $todayResult = $extension->today(10);
         $this->assertSame("2012-06-13T00:00:00+0200", $todayResult, 'The today function result did not produce the expected result');
     }
 
@@ -28,29 +26,41 @@ class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testNow()
     {
-        $now = new \DateTime("2012-06-03 22:22:22+0200");
+        $extension = $this->getExtension();
 
-        $context = $this->prophesize('Symfony\Component\Security\Core\SecurityContextInterface');
-        $extension = new BuiltInFunctionsExtension($context->reveal());
-
-        $todayResult = $extension->now(null, $now);
+        $todayResult = $extension->now(null);
         $this->assertSame("2012-06-03T22:22:22+0200", $todayResult, 'The today function result did not produce the expected  with no offset');
 
         $offset = "+5 days";
-        $todayResult = $extension->now($offset, $now);
+        $todayResult = $extension->now($offset);
         $this->assertSame("2012-06-08T22:22:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
 
         $offset = "-3 days";
-        $todayResult = $extension->now($offset, $now);
+        $todayResult = $extension->now($offset);
         $this->assertSame("2012-05-31T22:22:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
 
         $offset = "-6 days - 3 minutes";
-        $todayResult = $extension->now($offset, $now);
+        $todayResult = $extension->now($offset);
         $this->assertSame("2012-05-28T22:19:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
 
         $offset = "-30 minutes";
-        $todayResult = $extension->now($offset, $now);
+        $todayResult = $extension->now($offset);
         $this->assertSame("2012-06-03T21:52:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
     }
 
+
+    /**
+     * @return BuiltInFunctionsExtension
+     */
+    private function getExtension()
+    {
+        $now = new \DateTime("2012-06-03T22:22:22+0200");
+
+        $context = $this->prophesize('Symfony\Component\Security\Core\SecurityContextInterface');
+        $provider = $this->prophesize('Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider');
+        $provider->get()->willReturn($now);
+        $extension = new BuiltInFunctionsExtension($context->reveal(), $provider->reveal());
+
+        return $extension;
+    }
 }

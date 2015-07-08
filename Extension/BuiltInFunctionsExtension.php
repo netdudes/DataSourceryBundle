@@ -3,6 +3,7 @@
 namespace Netdudes\DataSourceryBundle\Extension;
 
 use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
+use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class BuiltInFunctionsExtension extends AbstractTableBundleExtension
@@ -13,11 +14,17 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     private $securityContext;
 
     /**
+     * @var CurrentDateTimeProvider
+     */
+    private $dateTimeProvider;
+
+    /**
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(SecurityContextInterface $securityContext)
+    public function __construct(SecurityContextInterface $securityContext, CurrentDateTimeProvider $dateTimeProvider)
     {
         $this->securityContext = $securityContext;
+        $this->dateTimeProvider = $dateTimeProvider;
     }
 
     /**
@@ -45,17 +52,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
      * Gets the current date, with an offset (positive or negative), in days
      *
      * @param int       $offset
-     * @param \DateTime $now
      *
      * @return string
      */
-    public function today($offset = 0, \DateTime $now = null)
+    public function today($offset = 0)
     {
-        if ($now === null) {
-            $now = new \DateTime();
-        } else {
-            $now = clone $now;
-        }
+        $now = clone $this->dateTimeProvider->get();
 
         $offset = intval($offset, 10);
         $invert = $offset < 0 ? 1 : 0;
@@ -72,17 +74,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
      * Gets the current timestamp, with an offset string
      *
      * @param int       $offset
-     * @param \DateTime $now
      *
      * @return string
      */
-    public function now($offset = null, \DateTime $now = null)
+    public function now($offset = null)
     {
-        if ($now === null) {
-            $now = new \DateTime();
-        } else {
-            $now = clone $now;
-        }
+        $now = clone $this->dateTimeProvider->get();
 
         if ($offset) {
             $offset = \DateInterval::createFromDateString($offset);
