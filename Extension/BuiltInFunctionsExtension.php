@@ -35,6 +35,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     {
         return [
             new TableBundleFunctionExtension('today', $this, 'today'),
+            new TableBundleFunctionExtension('now', $this, 'now'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
@@ -43,19 +44,50 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     /**
      * Gets the current date, with an offset (positive or negative), in days
      *
-     * @param int $offset
+     * @param int       $offset
+     * @param \DateTime $now
      *
      * @return string
      */
-    public function today($offset = 0)
+    public function today($offset = 0, \DateTime $now = null)
     {
+        if ($now === null) {
+            $now = new \DateTime();
+        } else {
+            $now = clone $now;
+        }
+
         $offset = intval($offset, 10);
         $invert = $offset < 0 ? 1 : 0;
         $offset = abs($offset);
-        $now = new \DateTime();
+        $now->setTime(0, 0, 0);
         $offset = new \DateInterval('P' . $offset . 'D');
         $offset->invert = $invert;
         $now->add($offset);
+
+        return $now->format(\DateTime::ISO8601);
+    }
+
+    /**
+     * Gets the current timestamp, with an offset string
+     *
+     * @param int       $offset
+     * @param \DateTime $now
+     *
+     * @return string
+     */
+    public function now($offset = null, \DateTime $now = null)
+    {
+        if ($now === null) {
+            $now = new \DateTime();
+        } else {
+            $now = clone $now;
+        }
+
+        if ($offset) {
+            $offset = \DateInterval::createFromDateString($offset);
+            $now->add($offset);
+        }
 
         return $now->format(\DateTime::ISO8601);
     }
