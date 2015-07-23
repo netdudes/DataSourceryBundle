@@ -5,8 +5,9 @@ use Netdudes\DataSourceryBundle\UQL\Exception\UQLSyntaxError;
 
 class UqlUnexpectedTokenException extends UQLSyntaxError
 {
-    private $unexpectedTokenName;
-    private $unexpectedTokenValue;
+    /**
+     * @var array
+     */
     private $expectedTokenCategories;
 
     /**
@@ -14,10 +15,15 @@ class UqlUnexpectedTokenException extends UQLSyntaxError
      */
     private $parsedTokenStream;
 
+    /**
+     * @param string $unexpectedTokenName
+     * @param int $unexpectedTokenValue
+     * @param array $expectedTokenCategories
+     * @param array $parsedTokenStream
+     * @param string|null $message
+     */
     function __construct($unexpectedTokenName, $unexpectedTokenValue, array $expectedTokenCategories, array $parsedTokenStream, $message = null)
     {
-        $this->unexpectedTokenName = $unexpectedTokenName;
-        $this->unexpectedTokenValue = $unexpectedTokenValue;
         $this->expectedTokenCategories = $expectedTokenCategories;
 
         $message = $message ?: 'Unexpected token "' . $unexpectedTokenName . ' (' . $unexpectedTokenValue . ')". ';

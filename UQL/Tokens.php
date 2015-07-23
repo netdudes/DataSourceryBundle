@@ -3,7 +3,6 @@ namespace Netdudes\DataSourceryBundle\UQL;
 
 class Tokens
 {
-
     public static $terminalTokens;
 
     public static $tokenCategories = [

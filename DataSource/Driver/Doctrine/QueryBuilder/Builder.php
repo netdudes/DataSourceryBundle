@@ -1,9 +1,7 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder;
 
-
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver;
@@ -14,10 +12,19 @@ use Netdudes\DataSourceryBundle\Query\Query;
 
 class Builder
 {
+    /**
+     * @var Filterer
+     */
     protected $filterer;
 
+    /**
+     * @var Sorter
+     */
     protected $sorter;
 
+    /**
+     * @var Paginator
+     */
     protected $paginator;
 
     /**
@@ -132,7 +139,7 @@ class Builder
     protected function getFromAlias()
     {
         if (is_null($this->fromAlias)) {
-            $this->fromAlias = uniqid("ENTITY_");
+            $this->fromAlias = uniqid('ENTITY_');
         }
 
         return $this->fromAlias;
