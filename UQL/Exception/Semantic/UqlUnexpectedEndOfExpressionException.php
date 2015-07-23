@@ -5,7 +5,6 @@ use Netdudes\DataSourceryBundle\UQL\Exception\UQLSyntaxError;
 
 class UqlUnexpectedEndOfExpressionException extends UQLSyntaxError
 {
-
     /**
      * @var string[]
      */
