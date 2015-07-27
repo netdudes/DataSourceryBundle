@@ -11,12 +11,14 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testBuildingChoicesWithInvalidConfig()
     {
+        $invalidConfig = 'invalid configuration';
+
         $emMock = $this->prepareEntityManagerMock();
 
         $builder = new ChoicesBuilder($emMock);
-        $choices = $builder->build('invalid config');
 
-        $this->assertNull($choices);
+        $this->setExpectedException('Exception', 'No usable configuration was found');
+        $builder->build($invalidConfig);
     }
 
     /**

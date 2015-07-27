@@ -1,6 +1,7 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource\Util;
 
+use Doctrine\DBAL\Driver\AbstractDriverException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
@@ -22,47 +23,58 @@ class ChoicesBuilder
     /**
      * @param array|callable $choicesConfiguration
      *
-     * @return array|null
+     * @return mixed
      *
      * @throws \Exception
      */
     public function build($choicesConfiguration)
     {
-        $choices = null;
-
         if (
             is_array($choicesConfiguration) &&
             isset($choicesConfiguration['repository'])
         ) {
-            if ($choicesConfiguration['repository'] instanceof EntityRepository) {
-                $repository = $this->getSpecifiedRepository($choicesConfiguration['repository']);
-            } else {
-                $repository = $this->entityManager->getRepository($choicesConfiguration['repository']);
-            }
-
-            if (isset($choicesConfiguration['field'])) {
-                $choices = $this->getChoicesFromRepositoryForField(
-                    $repository,
-                    $choicesConfiguration['field'],
-                    isset($choicesConfiguration['sort']) ? $choicesConfiguration['sort'] : null
-                );
-            } elseif (isset($choicesConfiguration['method'])) {
-                $choices = $this->getChoicesFromRepositoryWithMethod(
-                    $repository,
-                    $choicesConfiguration['method']
-                );
-            } else {
-                throw new \Exception('Repository source expects field or method parameter');
-            }
-        } elseif (is_callable($choicesConfiguration)) {
-            // Choices is a callable. It will generate the choices array.
-            $choices = $this->getChoicesFromCallable($choicesConfiguration);
-        } elseif (is_array($choicesConfiguration)) {
-            // Just a plain array. Use it as choices
-            $choices = $choicesConfiguration;
+            return $this->getChoicesFromRepository($choicesConfiguration);
+        }
+        if (is_callable($choicesConfiguration)) {
+            return $this->getChoicesFromCallable($choicesConfiguration);
+        }
+        if (is_array($choicesConfiguration)) {
+            return $choicesConfiguration;
         }
 
-        return $choices;
+        throw new \Exception('No usable configuration was found');
+    }
+
+    /**
+     * @param array $choicesConfiguration
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    private function getChoicesFromRepository(array $choicesConfiguration)
+    {
+        if ($choicesConfiguration['repository'] instanceof EntityRepository) {
+            $repository = $this->getSpecifiedRepository($choicesConfiguration['repository']);
+        } else {
+            $repository = $this->entityManager->getRepository($choicesConfiguration['repository']);
+        }
+
+        if (isset($choicesConfiguration['field'])) {
+            return $this->getChoicesFromRepositoryForField(
+                $repository,
+                $choicesConfiguration['field'],
+                isset($choicesConfiguration['sort']) ? $choicesConfiguration['sort'] : null
+            );
+        }
+        if (isset($choicesConfiguration['method'])) {
+            return $this->getChoicesFromRepositoryWithMethod(
+                $repository,
+                $choicesConfiguration['method']
+            );
+        }
+
+        throw new \Exception('Repository source expects field or method parameter');
     }
 
     /**
