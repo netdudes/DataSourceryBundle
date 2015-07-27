@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityRepository;
 
 class ChoicesBuilder
 {
-
     /**
      * @var EntityManager
      */
@@ -20,6 +19,13 @@ class ChoicesBuilder
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param array|callable $choicesConfiguration
+     *
+     * @return array|null
+     *
+     * @throws \Exception
+     */
     public function build($choicesConfiguration)
     {
         $choices = null;
@@ -30,7 +36,7 @@ class ChoicesBuilder
             isset($choicesConfiguration['field'])
         ) {
             if ($choicesConfiguration['repository'] instanceof EntityRepository) {
-                $repository = $choicesConfiguration['repository'];
+                $repository = $this->getSpecifiedRepository($choicesConfiguration['repository']);
             } else {
                 $repository = $this->entityManager->getRepository($choicesConfiguration['repository']);
             }
@@ -82,5 +88,18 @@ class ChoicesBuilder
         }
 
         return $choices;
+    }
+
+    /**
+     * @deprecated Repository should be specified by it's name, not as an actual object.
+     *
+     * @param EntityRepository $repository
+     *
+     * @return EntityRepository
+     */
+    private function getSpecifiedRepository(EntityRepository $repository)
+    {
+        trigger_error('Repository should be specified by it\'s name, not as an actual object.', E_USER_DEPRECATED);
+        return $repository;
     }
 }
