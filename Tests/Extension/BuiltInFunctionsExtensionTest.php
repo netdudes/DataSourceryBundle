@@ -7,20 +7,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testToday()
-    {
-        $extension = $this->getExtension();
-
-        $todayResult = $extension->today(null);
-        $this->assertSame("2012-06-03T00:00:00+0200", $todayResult, 'The today function result did not produce the expected result');
-
-        $todayResult = $extension->today(-5);
-        $this->assertSame("2012-05-29T00:00:00+0200", $todayResult, 'The today function result did not produce the expected result');
-
-        $todayResult = $extension->today(10);
-        $this->assertSame("2012-06-13T00:00:00+0200", $todayResult, 'The today function result did not produce the expected result');
-    }
-
     /**
      * This is just used to manually test the function
      */

@@ -43,35 +43,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     public function getFunctions()
     {
         return [
-            new TableBundleFunctionExtension('today', $this, 'today'),
             new TableBundleFunctionExtension('now', $this, 'now'),
             new TableBundleFunctionExtension('startOfDay', $this, 'startOfDay'),
             new TableBundleFunctionExtension('endOfDay', $this, 'endOfDay'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
-    }
-
-    /**
-     * Gets the current date, with an offset (positive or negative), in days
-     *
-     * @param int $offset
-     *
-     * @return string
-     */
-    public function today($offset = 0)
-    {
-        $now = clone $this->dateTimeProvider->get();
-
-        $offset = intval($offset, 10);
-        $invert = $offset < 0 ? 1 : 0;
-        $offset = abs($offset);
-        $now->setTime(0, 0, 0);
-        $offset = new \DateInterval('P' . $offset . 'D');
-        $offset->invert = $invert;
-        $now->add($offset);
-
-        return $now->format(\DateTime::ISO8601);
     }
 
     /**
