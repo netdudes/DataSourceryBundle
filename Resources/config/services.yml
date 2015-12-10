@@ -11,7 +11,8 @@ services:
 
     netdudes_data_sourcery.data_source.choices_builder:
         class: "Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder"
-        arguments: "@doctrine.orm.entity_manager"
+        arguments:
+            - "@doctrine.orm.entity_manager"
 
     netdudes_data_sourcery.data_source.factory:
         class: "Netdudes\DataSourceryBundle\DataSource\DataSourceFactory"
@@ -33,7 +34,7 @@ services:
     netdudes_data_sourcery.extension.built_in_functions:
         class: Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension
         arguments:
-            - "@security.token_torage"
+            - "@security.token_storage"
             - "@netdudes_data_sourcery.util.date_time_provider"
         tags:
             - { name: netdudes_data_sourcery.extension }
