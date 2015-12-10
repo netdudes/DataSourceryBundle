@@ -22,7 +22,7 @@ class UqlUnexpectedTokenException extends UQLSyntaxError
      * @param array $parsedTokenStream
      * @param string|null $message
      */
-    function __construct($unexpectedTokenName, $unexpectedTokenValue, array $expectedTokenCategories, array $parsedTokenStream, $message = null)
+    public function __construct($unexpectedTokenName, $unexpectedTokenValue, array $expectedTokenCategories, array $parsedTokenStream, $message = null)
     {
         $this->expectedTokenCategories = $expectedTokenCategories;
 
