@@ -75,17 +75,23 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     /**
      * Gets the current timestamp, with an offset string
      *
-     * @param int $offset
+     * @param string $offset
      *
      * @return string
+     * @throws \Exception
      */
     public function now($offset = null)
     {
         $now = clone $this->dateTimeProvider->get();
 
         if ($offset) {
-            $offset = \DateInterval::createFromDateString($offset);
-            $now->add($offset);
+            $interval = \DateInterval::createFromDateString($offset);
+            $now->add($interval);
+
+            if ($now == $this->dateTimeProvider->get()) {
+                // The date didn't change therefore we assume the given offset is not valid
+                throw new \Exception($offset . ' is not a valid date/time interval.');
+            }
         }
 
         return $now->format(\DateTime::ISO8601);
