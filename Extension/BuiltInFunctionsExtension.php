@@ -5,7 +5,6 @@ namespace Netdudes\DataSourceryBundle\Extension;
 use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class BuiltInFunctionsExtension extends AbstractTableBundleExtension
 {
