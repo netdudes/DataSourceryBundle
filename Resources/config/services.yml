@@ -1,40 +1,45 @@
 services:
     netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory:
         class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\BuilderFactory"
-        arguments: [@doctrine.orm.entity_manager]
+        arguments:
+            - "@doctrine.orm.entity_manager"
 
     netdudes_data_sourcery.data_source.driver.doctrine:
         class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver"
-        arguments: [@netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory]
+        arguments:
+            - "@netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory"
 
     netdudes_data_sourcery.data_source.choices_builder:
-        class: Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder
-        arguments: [@doctrine.orm.entity_manager]
+        class: "Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder"
+        arguments: "@doctrine.orm.entity_manager"
 
     netdudes_data_sourcery.data_source.factory:
         class: "Netdudes\DataSourceryBundle\DataSource\DataSourceFactory"
-        arguments: [@netdudes_data_sourcery.data_source.driver.doctrine, @netdudes_data_sourcery.data_source.builder.factory]
+        arguments:
+            - "@netdudes_data_sourcery.data_source.driver.doctrine"
+            - "@netdudes_data_sourcery.data_source.builder.factory"
 
     netdudes_data_sourcery.data_source.builder.factory:
         class: "Netdudes\DataSourceryBundle\DataSource\DataSourceBuilderFactory"
-        arguments: [@netdudes_data_sourcery.data_source.choices_builder]
+        arguments:
+            - "@netdudes_data_sourcery.data_source.choices_builder"
 
     netdudes_data_sourcery.uql.interpreter.factory:
         class: Netdudes\DataSourceryBundle\UQL\InterpreterFactory
         arguments:
             - "@netdudes_data_sourcery.extension_container"
-            - %netdudes_data_sourcery.uql.case_sensitive%
+            - "%netdudes_data_sourcery.uql.case_sensitive%"
 
     netdudes_data_sourcery.extension.built_in_functions:
         class: Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension
         arguments:
-            - "@security.context"
+            - "@security.token_torage"
             - "@netdudes_data_sourcery.util.date_time_provider"
         tags:
             - { name: netdudes_data_sourcery.extension }
 
     netdudes_data_sourcery.extension_container:
-        class: Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer
+        class: "Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer"
 
     netdudes_data_sourcery.util.date_time_provider:
-        class: Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider
+        class: "Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider"

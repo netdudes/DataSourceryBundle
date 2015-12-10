@@ -158,7 +158,6 @@ class Interpreter
 
             return $filterDefinition;
         } elseif ($astSubtree instanceof ASTAssertion) {
-            
             $dataSourceElement = $this->matchDataSourceElement($astSubtree->getIdentifier());
             $method = $this->translateOperator($astSubtree->getOperator(), $dataSourceElement);
             if ($astSubtree->getValue() instanceof ASTFunctionCall) {

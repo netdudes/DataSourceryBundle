@@ -4,14 +4,15 @@ namespace Netdudes\DataSourceryBundle\Extension;
 
 use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class BuiltInFunctionsExtension extends AbstractTableBundleExtension
 {
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var CurrentDateTimeProvider
@@ -19,11 +20,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     private $dateTimeProvider;
 
     /**
-     * @param SecurityContextInterface $securityContext
+     * @param TokenStorageInterface   $tokenStorage
+     * @param CurrentDateTimeProvider $dateTimeProvider
      */
-    public function __construct(SecurityContextInterface $securityContext, CurrentDateTimeProvider $dateTimeProvider)
+    public function __construct(TokenStorageInterface $tokenStorage, CurrentDateTimeProvider $dateTimeProvider)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->dateTimeProvider = $dateTimeProvider;
     }
 
@@ -51,7 +53,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     /**
      * Gets the current date, with an offset (positive or negative), in days
      *
-     * @param int       $offset
+     * @param int $offset
      *
      * @return string
      */
@@ -73,7 +75,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     /**
      * Gets the current timestamp, with an offset string
      *
-     * @param int       $offset
+     * @param int $offset
      *
      * @return string
      */
@@ -96,7 +98,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
      */
     public function currentUser()
     {
-        return $this->securityContext->getToken()->getUsername();
+        return $this->tokenStorage->getToken()->getUsername();
     }
 
     /**

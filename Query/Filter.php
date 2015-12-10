@@ -1,5 +1,4 @@
 <?php
-
 namespace Netdudes\DataSourceryBundle\Query;
 
 use Netdudes\DataSourceryBundle\Util\AbstractArrayAccessibleCollection;
