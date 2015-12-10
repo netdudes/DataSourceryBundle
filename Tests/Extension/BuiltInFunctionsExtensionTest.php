@@ -2,13 +2,13 @@
 namespace Netdudes\DataSourceryBundle\Tests\Extension;
 
 use Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension;
+use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testToday()
     {
-
         $extension = $this->getExtension();
 
         $todayResult = $extension->today(null);
@@ -56,10 +56,10 @@ class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $now = new \DateTime("2012-06-03T22:22:22+0200");
 
-        $context = $this->prophesize('Symfony\Component\Security\Core\SecurityContextInterface');
-        $provider = $this->prophesize('Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider');
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $provider = $this->prophesize(CurrentDateTimeProvider::class);
         $provider->get()->willReturn($now);
-        $extension = new BuiltInFunctionsExtension($context->reveal(), $provider->reveal());
+        $extension = new BuiltInFunctionsExtension($tokenStorage->reveal(), $provider->reveal());
 
         return $extension;
     }

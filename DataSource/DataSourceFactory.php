@@ -7,7 +7,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DataSourceFactory implements DataSourceFactoryInterface
 {
-
     /**
      * @var DataSourceBuilderFactory
      */

@@ -7,7 +7,6 @@ use Netdudes\DataSourceryBundle\Query\Query;
 
 class SelectGenerator
 {
-
     /**
      * @var JoinGenerator
      */

@@ -6,7 +6,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class DataSourceBuilderFactory
 {
-
     /**
      * @var ChoicesBuilder
      */

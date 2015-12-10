@@ -12,7 +12,6 @@ use Netdudes\DataSourceryBundle\DataType\DataTypeInterface;
  */
 class Field implements FieldInterface
 {
-
     /**
      * @var string
      */
