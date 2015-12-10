@@ -146,6 +146,35 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
+     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::getChoicesFromRepositoryWithMethod
+     */
+    public function testBuildingChoicesFromRepositoryMethodWhenMethodDoesNotReturnAnArray()
+    {
+        $methodName = 'a_method';
+        $repositoryName = 'a_test_repository';
+
+        $repositoryMock = $this->prepareRepositoryMock([$methodName]);
+        $repositoryMock->expects($this->once())
+            ->method($methodName)
+            ->willReturn('not an array');
+
+        $emMock = $this->prepareEntityManagerMock();
+        $emMock->expects($this->once())
+            ->method('getRepository')
+            ->with($this->equalTo($repositoryName))
+            ->willReturn($repositoryMock);
+
+        $builder = new ChoicesBuilder($emMock);
+
+        $this->setExpectedException('Exception', 'Choices repository method defined in table configurations must return array');
+        $builder->build([
+            'repository' => $repositoryName,
+            'method' => $methodName,
+        ]);
+    }
+
+    /**
+     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
      */
     public function testBuildingChoicesFromRepositoryWithoutSpecifyingFieldOrMethod()
     {
@@ -197,14 +226,14 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
     public function testBuildingChoicesFromCallableWhenResultIsNotAnArray()
     {
         $aCallable = function () {
-            return 'choice';
+            return 'not an array';
         };
 
         $emMock = $this->prepareEntityManagerMock();
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException('Exception', 'Choices callback defined in table configurations must return arrays');
+        $this->setExpectedException('Exception', 'Choices callback defined in table configurations must return array');
         $builder->build($aCallable);
     }
 

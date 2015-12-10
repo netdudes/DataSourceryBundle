@@ -1,7 +1,6 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource\Util;
 
-use Doctrine\DBAL\Driver\AbstractDriverException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
@@ -23,7 +22,7 @@ class ChoicesBuilder
     /**
      * @param array|callable $choicesConfiguration
      *
-     * @return mixed
+     * @return array
      *
      * @throws \Exception
      */
@@ -48,7 +47,7 @@ class ChoicesBuilder
     /**
      * @param array $choicesConfiguration
      *
-     * @return mixed
+     * @return array
      *
      * @throws \Exception
      */
@@ -78,7 +77,7 @@ class ChoicesBuilder
     }
 
     /**
-     * @deprecated Repository should be specified by it's name, not as an actual object.
+     * @deprecated Specifying repository as an object is deprecated and will not be supported since 1.0.0. Specify it by it's name instead.
      *
      * @param EntityRepository $repository
      *
@@ -86,7 +85,8 @@ class ChoicesBuilder
      */
     private function getSpecifiedRepository(EntityRepository $repository)
     {
-        trigger_error('Repository should be specified by it\'s name, not as an actual object.', E_USER_DEPRECATED);
+        trigger_error('Specifying repository as an object is deprecated and will not be supported since 1.0.0. Specify it by it\'s name instead.', E_USER_DEPRECATED);
+
         return $repository;
     }
 
@@ -96,7 +96,6 @@ class ChoicesBuilder
      *
      * @param EntityRepository $repository
      * @param string           $property
-     *
      * @param null|string      $sortOrder
      *
      * @return array
@@ -125,7 +124,7 @@ class ChoicesBuilder
      * @param EntityRepository $repository
      * @param string           $method
      *
-     * @return mixed
+     * @return array
      *
      * @throws \Exception
      */
@@ -135,13 +134,18 @@ class ChoicesBuilder
             throw new \Exception("Specified repository does not have '$method' method");
         }
 
-        return $repository->$method();
+        $choices = $repository->$method();
+        if (!is_array($choices)) {
+            throw new \Exception('Choices repository method defined in table configurations must return array');
+        }
+
+        return $choices;
     }
 
     /**
      * @param callable $callable
      *
-     * @return mixed
+     * @return array
      *
      * @throws \Exception
      */
@@ -149,7 +153,7 @@ class ChoicesBuilder
     {
         $choices = $callable();
         if (!is_array($choices)) {
-            throw new \Exception("Choices callback defined in table configurations must return arrays");
+            throw new \Exception('Choices callback defined in table configurations must return array');
         }
 
         return $choices;
