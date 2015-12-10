@@ -48,6 +48,32 @@ class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame("2012-06-03T21:52:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
     }
 
+    public function testStartOfDay()
+    {
+        $extension = $this->getExtension();
+
+        $startOfDayResult = $extension->startOfDay();
+        $this->assertSame('2012-06-03T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
+
+        $startOfDayResult = $extension->startOfDay('+2 hours');
+        $this->assertSame('2012-06-04T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
+
+        $startOfDayResult = $extension->startOfDay('-5 days');
+        $this->assertSame('2012-05-29T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
+
+        $startOfDayResult = $extension->startOfDay('+1 month');
+        $this->assertSame('2012-07-03T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
+
+        $startOfDayResult = $extension->startOfDay('15-05-2012');
+        $this->assertSame('2012-05-15T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
+
+        $startOfDayResult = $extension->startOfDay('2012-05-15');
+        $this->assertSame('2012-05-15T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
+
+        $startOfDayResult = $extension->startOfDay('15.05.2012');
+        $this->assertSame('2012-05-15T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
+    }
+
 
     /**
      * @return BuiltInFunctionsExtension

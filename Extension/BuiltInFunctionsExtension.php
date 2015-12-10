@@ -45,6 +45,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
         return [
             new TableBundleFunctionExtension('today', $this, 'today'),
             new TableBundleFunctionExtension('now', $this, 'now'),
+            new TableBundleFunctionExtension('startOfDay', $this, 'startOfDay'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
@@ -98,6 +99,27 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     }
 
     /**
+     * Gets a date with the hour 00:00:00
+     *
+     * @param string $date
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function startOfDay($date = null)
+    {
+        $now = clone $this->dateTimeProvider->get();
+
+        if ($date) {
+            $now = $this->modifyDate($now, $date);
+        }
+
+        $now->setTime(0, 0, 0);
+
+        return $now->format(\DateTime::ISO8601);
+    }
+
+    /**
      * Gets the current users' username
      *
      * @return string
@@ -118,5 +140,23 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     public function random($min = 0, $max = 10)
     {
         return rand($min, $max);
+    }
+
+    /**
+     * @param \DateTime $date
+     * @param string    $change
+     *
+     * @return \DateTime
+     * @throws \Exception
+     */
+    private function modifyDate(\DateTime $date, $change)
+    {
+        try {
+            $date->modify($change);
+        } catch (\Exception $e) {
+            throw new \Exception($change . ' is not a valid date or date offset.');
+        }
+
+        return ($date);
     }
 }
