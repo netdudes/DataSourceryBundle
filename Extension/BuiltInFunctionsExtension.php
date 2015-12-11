@@ -46,6 +46,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
             new TableBundleFunctionExtension('startOfDay', $this, 'startOfDay'),
             new TableBundleFunctionExtension('startOfWeek', $this, 'startOfWeek'),
             new TableBundleFunctionExtension('startOfMonth', $this, 'startOfMonth'),
+            new TableBundleFunctionExtension('startOfYear', $this, 'startOfYear'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
@@ -147,6 +148,31 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
         return $startOfMonth->format(\DateTime::ISO8601);
     }
 
+    /**
+     * Gets the first day of the year for the specified date with the hour 00:00:00
+     *
+     * @param string $date
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function startOfYear($date = null)
+    {
+        $now = clone $this->dateTimeProvider->get();
+
+        if ($date) {
+            $now = $this->modifyDate($now, $date);
+        }
+
+        $year = $now->format('Y');
+
+        $startOfYear = $now->setDate($year, 1, 1);
+        $startOfYear->setTime(0, 0, 0);
+
+        return $startOfYear->format(\DateTime::ISO8601);
+    }
+
+    /**
      * Gets the current users' username
      *
      * @return string
