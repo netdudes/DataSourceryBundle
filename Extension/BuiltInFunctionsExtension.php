@@ -44,6 +44,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
         return [
             new TableBundleFunctionExtension('now', $this, 'now'),
             new TableBundleFunctionExtension('startOfDay', $this, 'startOfDay'),
+            new TableBundleFunctionExtension('startOfWeek', $this, 'startOfWeek'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
@@ -93,6 +94,31 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
         $now->setTime(0, 0, 0);
 
         return $now->format(\DateTime::ISO8601);
+    }
+
+    /**
+     * Gets the Monday of the week for the specified date with the hour 00:00:00
+     *
+     * @param string $date
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function startOfWeek($date = null)
+    {
+        $now = clone $this->dateTimeProvider->get();
+
+        if ($date) {
+            $now = $this->modifyDate($now, $date);
+        }
+
+        $year = $now->format('o'); // o = ISO-8601 year number
+        $week = $now->format('W'); // W = ISO-8601 week number of year, weeks starting on Monday
+
+        $startOfWeek = $now->setISODate($year, $week);
+        $startOfWeek->setTime(0, 0, 0);
+
+        return $startOfWeek->format(\DateTime::ISO8601);
     }
 
     /**
