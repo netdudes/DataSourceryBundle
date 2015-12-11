@@ -45,7 +45,6 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
         return [
             new TableBundleFunctionExtension('now', $this, 'now'),
             new TableBundleFunctionExtension('startOfDay', $this, 'startOfDay'),
-            new TableBundleFunctionExtension('endOfDay', $this, 'endOfDay'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
@@ -93,27 +92,6 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
         }
 
         $now->setTime(0, 0, 0);
-
-        return $now->format(\DateTime::ISO8601);
-    }
-
-    /**
-     * Gets a date with the hour 23:59:59
-     *
-     * @param string $date
-     *
-     * @return string
-     * @throws \Exception
-     */
-    public function endOfDay($date = null)
-    {
-        $now = clone $this->dateTimeProvider->get();
-
-        if ($date) {
-            $now = $this->modifyDate($now, $date);
-        }
-
-        $now->setTime(23, 59, 59);
 
         return $now->format(\DateTime::ISO8601);
     }

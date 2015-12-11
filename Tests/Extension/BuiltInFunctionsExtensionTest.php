@@ -60,31 +60,6 @@ class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('2012-05-15T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
     }
 
-    public function testEndOfDay()
-    {
-        $extension = $this->getExtension();
-
-        $endOfDayResult = $extension->endOfDay();
-        $this->assertSame('2012-06-03T23:59:59+0200', $endOfDayResult, 'The endOfDay function result did not produce the expected result');
-
-        $endOfDayResult = $extension->endOfDay('+2 hours');
-        $this->assertSame('2012-06-04T23:59:59+0200', $endOfDayResult, 'The endOfDay function result did not produce the expected result');
-
-        $endOfDayResult = $extension->endOfDay('-5 days');
-        $this->assertSame('2012-05-29T23:59:59+0200', $endOfDayResult, 'The endOfDay function result did not produce the expected result');
-
-        $endOfDayResult = $extension->endOfDay('+1 month');
-        $this->assertSame('2012-07-03T23:59:59+0200', $endOfDayResult, 'The endOfDay function result did not produce the expected result');
-
-        $endOfDayResult = $extension->endOfDay('15-05-2012');
-        $this->assertSame('2012-05-15T23:59:59+0200', $endOfDayResult, 'The endOfDay function result did not produce the expected result');
-
-        $endOfDayResult = $extension->endOfDay('2012-05-15');
-        $this->assertSame('2012-05-15T23:59:59+0200', $endOfDayResult, 'The endOfDay function result did not produce the expected result');
-
-        $endOfDayResult = $extension->endOfDay('15.05.2012');
-        $this->assertSame('2012-05-15T23:59:59+0200', $endOfDayResult, 'The endOfDay function result did not produce the expected result');
-    }
 
     /**
      * @return BuiltInFunctionsExtension
