@@ -176,6 +176,31 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
      */
+    public function testBuildingChoicesFromRepositoryWhenSpecifyingBothFieldAndMethod()
+    {
+        $repositoryName = 'a_test_repository';
+
+        $repositoryMock = $this->prepareRepositoryMock();
+
+        $emMock = $this->prepareEntityManagerMock();
+        $emMock->expects($this->once())
+            ->method('getRepository')
+            ->with($this->equalTo($repositoryName))
+            ->willReturn($repositoryMock);
+
+        $builder = new ChoicesBuilder($emMock);
+
+        $this->setExpectedException('Exception', 'Repository source expects field or method parameter, but not both');
+        $builder->build([
+            'repository' => $repositoryName,
+            'field' => 'a_field',
+            'method' => 'a_method',
+        ]);
+    }
+
+    /**
+     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
+     */
     public function testBuildingChoicesFromRepositoryWithoutSpecifyingFieldOrMethod()
     {
         $repositoryName = 'a_test_repository';

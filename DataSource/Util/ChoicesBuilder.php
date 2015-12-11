@@ -28,16 +28,15 @@ class ChoicesBuilder
      */
     public function build($choicesConfiguration)
     {
-        if (
-            is_array($choicesConfiguration) &&
-            isset($choicesConfiguration['repository'])
-        ) {
-            return $this->getChoicesFromRepository($choicesConfiguration);
-        }
         if (is_callable($choicesConfiguration)) {
             return $this->getChoicesFromCallable($choicesConfiguration);
         }
+
         if (is_array($choicesConfiguration)) {
+            if (isset($choicesConfiguration['repository'])) {
+                return $this->getChoicesFromRepository($choicesConfiguration);
+            }
+
             return $choicesConfiguration;
         }
 
@@ -57,6 +56,10 @@ class ChoicesBuilder
             $repository = $this->getSpecifiedRepository($choicesConfiguration['repository']);
         } else {
             $repository = $this->entityManager->getRepository($choicesConfiguration['repository']);
+        }
+
+        if (isset($choicesConfiguration['field']) && isset($choicesConfiguration['method'])) {
+            throw new \Exception('Repository source expects field or method parameter, but not both');
         }
 
         if (isset($choicesConfiguration['field'])) {
