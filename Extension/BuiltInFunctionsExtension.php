@@ -5,7 +5,6 @@ namespace Netdudes\DataSourceryBundle\Extension;
 use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class BuiltInFunctionsExtension extends AbstractTableBundleExtension
 {
@@ -43,50 +42,55 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     public function getFunctions()
     {
         return [
-            new TableBundleFunctionExtension('today', $this, 'today'),
             new TableBundleFunctionExtension('now', $this, 'now'),
+            new TableBundleFunctionExtension('startOfDay', $this, 'startOfDay'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
     }
 
     /**
-     * Gets the current date, with an offset (positive or negative), in days
-     *
-     * @param int $offset
-     *
-     * @return string
-     */
-    public function today($offset = 0)
-    {
-        $now = clone $this->dateTimeProvider->get();
-
-        $offset = intval($offset, 10);
-        $invert = $offset < 0 ? 1 : 0;
-        $offset = abs($offset);
-        $now->setTime(0, 0, 0);
-        $offset = new \DateInterval('P' . $offset . 'D');
-        $offset->invert = $invert;
-        $now->add($offset);
-
-        return $now->format(\DateTime::ISO8601);
-    }
-
-    /**
      * Gets the current timestamp, with an offset string
      *
-     * @param int $offset
+     * @param string $offset
      *
      * @return string
+     * @throws \Exception
      */
     public function now($offset = null)
     {
         $now = clone $this->dateTimeProvider->get();
 
         if ($offset) {
-            $offset = \DateInterval::createFromDateString($offset);
-            $now->add($offset);
+            $interval = \DateInterval::createFromDateString($offset);
+            $now->add($interval);
+
+            if ($now == $this->dateTimeProvider->get()) {
+                // The date didn't change therefore we assume the given offset is not valid
+                throw new \Exception($offset . ' is not a valid date/time interval.');
+            }
         }
+
+        return $now->format(\DateTime::ISO8601);
+    }
+
+    /**
+     * Gets a date with the hour 00:00:00
+     *
+     * @param string $date
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function startOfDay($date = null)
+    {
+        $now = clone $this->dateTimeProvider->get();
+
+        if ($date) {
+            $now = $this->modifyDate($now, $date);
+        }
+
+        $now->setTime(0, 0, 0);
 
         return $now->format(\DateTime::ISO8601);
     }
@@ -112,5 +116,23 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     public function random($min = 0, $max = 10)
     {
         return rand($min, $max);
+    }
+
+    /**
+     * @param \DateTime $date
+     * @param string    $change
+     *
+     * @return \DateTime
+     * @throws \Exception
+     */
+    private function modifyDate(\DateTime $date, $change)
+    {
+        try {
+            $date->modify($change);
+        } catch (\Exception $e) {
+            throw new \Exception($change . ' is not a valid date or date offset.');
+        }
+
+        return ($date);
     }
 }
