@@ -39,9 +39,12 @@ class Filter extends AbstractArrayAccessibleCollection implements \JsonSerializa
      *
      * @return array|Filter|FilterCondition
      * @throws \Exception
+     * @deprecated Deprecated to be removed in 1.0.0. It seems to be unused.
      */
     public static function createFromJsonSerializable($jsonSerializable)
     {
+        @trigger_error('createFromJsonSerializable() is deprecated and will be removed in 1.0.0. It seems to be unused.', E_USER_DEPRECATED);
+
         if (!count((array) $jsonSerializable)) {
             // Edge case: empty filter
             return new Filter();
@@ -90,15 +93,6 @@ class Filter extends AbstractArrayAccessibleCollection implements \JsonSerializa
      */
     public function jsonSerialize()
     {
-        return $this->toJsonSerializable();
-    }
-
-    /**
-     * Recursively compact into a easily JSON-serializable array
-     * representation
-     */
-    public function toJsonSerializable()
-    {
         $serializableArray = [
             'logic' => $this->getConditionType(),
             'elements' => [],
@@ -108,6 +102,18 @@ class Filter extends AbstractArrayAccessibleCollection implements \JsonSerializa
         }
 
         return $serializableArray;
+    }
+
+    /**
+     * Recursively compact into a easily JSON-serializable array
+     * representation
+     * @deprecated Deprecated to be removed in 1.0.0. It seems to be unused.
+     */
+    public function toJsonSerializable()
+    {
+        @trigger_error('toJsonSerializable() is deprecated and will be removed in 1.0.0. It seems to be unused.', E_USER_DEPRECATED);
+
+        return $this->jsonSerialize();
     }
 
     /**
