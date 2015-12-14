@@ -1,27 +1,27 @@
 services:
     netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory:
-        class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\BuilderFactory"
+        class: Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\BuilderFactory
         arguments:
             - "@doctrine.orm.entity_manager"
 
     netdudes_data_sourcery.data_source.driver.doctrine:
-        class: "Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver"
+        class: Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\DoctrineDriver
         arguments:
             - "@netdudes_data_sourcery.data_source.driver.doctrine.query_builder.builder.factory"
 
     netdudes_data_sourcery.data_source.choices_builder:
-        class: "Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder"
+        class: Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder
         arguments:
             - "@doctrine.orm.entity_manager"
 
     netdudes_data_sourcery.data_source.factory:
-        class: "Netdudes\DataSourceryBundle\DataSource\DataSourceFactory"
+        class: Netdudes\DataSourceryBundle\DataSource\DataSourceFactory
         arguments:
             - "@netdudes_data_sourcery.data_source.driver.doctrine"
             - "@netdudes_data_sourcery.data_source.builder.factory"
 
     netdudes_data_sourcery.data_source.builder.factory:
-        class: "Netdudes\DataSourceryBundle\DataSource\DataSourceBuilderFactory"
+        class: Netdudes\DataSourceryBundle\DataSource\DataSourceBuilderFactory
         arguments:
             - "@netdudes_data_sourcery.data_source.choices_builder"
 
@@ -40,7 +40,7 @@ services:
             - { name: netdudes_data_sourcery.extension }
 
     netdudes_data_sourcery.extension_container:
-        class: "Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer"
+        class: Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer
 
     netdudes_data_sourcery.util.date_time_provider:
-        class: "Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider"
+        class: Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider
