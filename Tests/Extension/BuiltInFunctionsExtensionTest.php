@@ -60,6 +60,83 @@ class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('2012-05-15T00:00:00+0200', $startOfDayResult, 'The startOfDay function result did not produce the expected result');
     }
 
+    public function testStartOfWeek()
+    {
+        $extension = $this->getExtension();
+
+        $startOfWeekResult = $extension->startOfWeek();
+        $this->assertSame('2012-05-28T00:00:00+0200', $startOfWeekResult, 'The startOfWeek function result did not produce the expected result');
+
+        $startOfWeekResult = $extension->startOfWeek('+2 hours');
+        $this->assertSame('2012-06-04T00:00:00+0200', $startOfWeekResult, 'The startOfWeek function result did not produce the expected result');
+
+        $startOfWeekResult = $extension->startOfWeek('-5 days');
+        $this->assertSame('2012-05-28T00:00:00+0200', $startOfWeekResult, 'The startOfWeek function result did not produce the expected result');
+
+        $startOfWeekResult = $extension->startOfWeek('+1 month');
+        $this->assertSame('2012-07-02T00:00:00+0200', $startOfWeekResult, 'The startOfWeek function result did not produce the expected result');
+
+        $startOfWeekResult = $extension->startOfWeek('15-05-2012');
+        $this->assertSame('2012-05-14T00:00:00+0200', $startOfWeekResult, 'The startOfWeek function result did not produce the expected result');
+
+        $startOfWeekResult = $extension->startOfWeek('2012-05-15');
+        $this->assertSame('2012-05-14T00:00:00+0200', $startOfWeekResult, 'The startOfWeek function result did not produce the expected result');
+
+        $startOfWeekResult = $extension->startOfWeek('15.05.2012');
+        $this->assertSame('2012-05-14T00:00:00+0200', $startOfWeekResult, 'The startOfWeek function result did not produce the expected result');
+    }
+
+    public function testStartOfMonth()
+    {
+        $extension = $this->getExtension();
+
+        $startOfMonthResult = $extension->startOfMonth();
+        $this->assertSame('2012-06-01T00:00:00+0200', $startOfMonthResult, 'The startOfMonth function result did not produce the expected result');
+
+        $startOfMonthResult = $extension->startOfMonth('+2 hours');
+        $this->assertSame('2012-06-01T00:00:00+0200', $startOfMonthResult, 'The startOfMonth function result did not produce the expected result');
+
+        $startOfMonthResult = $extension->startOfMonth('-5 days');
+        $this->assertSame('2012-05-01T00:00:00+0200', $startOfMonthResult, 'The startOfMonth function result did not produce the expected result');
+
+        $startOfMonthResult = $extension->startOfMonth('+1 month');
+        $this->assertSame('2012-07-01T00:00:00+0200', $startOfMonthResult, 'The startOfMonth function result did not produce the expected result');
+
+        $startOfMonthResult = $extension->startOfMonth('15-05-2012');
+        $this->assertSame('2012-05-01T00:00:00+0200', $startOfMonthResult, 'The startOfMonth function result did not produce the expected result');
+
+        $startOfMonthResult = $extension->startOfMonth('2012-05-15');
+        $this->assertSame('2012-05-01T00:00:00+0200', $startOfMonthResult, 'The startOfMonth function result did not produce the expected result');
+
+        $startOfMonthResult = $extension->startOfMonth('15.05.2012');
+        $this->assertSame('2012-05-01T00:00:00+0200', $startOfMonthResult, 'The startOfMonth function result did not produce the expected result');
+    }
+
+    public function testStartOfYear()
+    {
+        $extension = $this->getExtension();
+
+        $startOfYearResult = $extension->startOfYear();
+        $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
+
+        $startOfYearResult = $extension->startOfYear('+2 hours');
+        $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
+
+        $startOfYearResult = $extension->startOfYear('-5 days');
+        $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
+
+        $startOfYearResult = $extension->startOfYear('+1 month');
+        $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
+
+        $startOfYearResult = $extension->startOfYear('15-05-2012');
+        $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
+
+        $startOfYearResult = $extension->startOfYear('2012-05-15');
+        $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
+
+        $startOfYearResult = $extension->startOfYear('15.05.2012');
+        $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
+    }
 
     /**
      * @return BuiltInFunctionsExtension
