@@ -2,6 +2,7 @@
 
 namespace Netdudes\DataSourceryBundle\Extension;
 
+use Doctrine\ORM\EntityManager;
 use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -19,13 +20,31 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     private $dateTimeProvider;
 
     /**
-     * @param TokenStorageInterface   $tokenStorage
-     * @param CurrentDateTimeProvider $dateTimeProvider
+     * @var EntityManager
      */
-    public function __construct(TokenStorageInterface $tokenStorage, CurrentDateTimeProvider $dateTimeProvider)
+    private $entityManager;
+
+    /**
+     * @var string
+     */
+    private $userClass;
+
+    /**
+     * @param TokenStorageInterface $tokenStorage
+     * @param CurrentDateTimeProvider $dateTimeProvider
+     * @param EntityManager $entityManager
+     */
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        CurrentDateTimeProvider $dateTimeProvider,
+        EntityManager $entityManager,
+        $userClass
+    )
     {
         $this->tokenStorage = $tokenStorage;
         $this->dateTimeProvider = $dateTimeProvider;
+        $this->entityManager = $entityManager;
+        $this->userClass = $userClass;
     }
 
     /**
@@ -48,6 +67,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
             new TableBundleFunctionExtension('startOfMonth', $this, 'startOfMonth'),
             new TableBundleFunctionExtension('startOfYear', $this, 'startOfYear'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
+            new TableBundleFunctionExtension('lastLogin', $this, 'lastLogin'),
             new TableBundleFunctionExtension('random', $this, 'random')
         ];
     }
@@ -180,6 +200,30 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     public function currentUser()
     {
         return $this->tokenStorage->getToken()->getUsername();
+    }
+
+    /**
+     * Gets the datetime of the last login by user
+     *
+     * @param null $userName
+     *
+     * @return \DateTime
+     * @throws \Exception
+     */
+    public function lastLogin($userName = null)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if(!is_null($userName)){
+            $userRepository = $this->entityManager->getRepository($this->userClass);
+            $user = $userRepository->findOneBy(['username' => $userName]);
+
+            if(is_null($user)){
+                throw new \Exception('User with username "' . $userName . '" could not be found.');
+            }
+        }
+
+        return $user->getLastLogin();
     }
 
     /**
