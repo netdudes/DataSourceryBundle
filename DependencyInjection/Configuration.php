@@ -22,11 +22,15 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('user_class')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
                 ->arrayNode('uql')
-                ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('case_sensitive')
-                    ->defaultTrue()
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('case_sensitive')
+                        ->defaultTrue()
                     ->end()
                 ->end()
             ->end();

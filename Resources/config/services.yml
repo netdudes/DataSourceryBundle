@@ -36,6 +36,8 @@ services:
         arguments:
             - "@security.token_storage"
             - "@netdudes_data_sourcery.util.date_time_provider"
+            - "@doctrine.orm.entity_manager"
+            - "%netdudes_data_sourcery.user_class%"
         tags:
             - { name: netdudes_data_sourcery.extension }
 

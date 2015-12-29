@@ -2,6 +2,7 @@
 
 namespace Netdudes\DataSourceryBundle\Extension;
 
+use Doctrine\ORM\EntityManager;
 use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -19,13 +20,30 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     private $dateTimeProvider;
 
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var string
+     */
+    private $userClass;
+
+    /**
      * @param TokenStorageInterface   $tokenStorage
      * @param CurrentDateTimeProvider $dateTimeProvider
+     * @param EntityManager           $entityManager
      */
-    public function __construct(TokenStorageInterface $tokenStorage, CurrentDateTimeProvider $dateTimeProvider)
-    {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        CurrentDateTimeProvider $dateTimeProvider,
+        EntityManager $entityManager,
+        $userClass
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->dateTimeProvider = $dateTimeProvider;
+        $this->entityManager = $entityManager;
+        $this->userClass = $userClass;
     }
 
     /**
@@ -48,16 +66,18 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
             new TableBundleFunctionExtension('startOfMonth', $this, 'startOfMonth'),
             new TableBundleFunctionExtension('startOfYear', $this, 'startOfYear'),
             new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
-            new TableBundleFunctionExtension('random', $this, 'random')
+            new TableBundleFunctionExtension('lastLogin', $this, 'lastLogin'),
+            new TableBundleFunctionExtension('random', $this, 'random'),
         ];
     }
 
     /**
-     * Gets the current timestamp, with an offset string
+     * Gets the current timestamp, with an offset string.
      *
      * @param string $offset
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function now($offset = null)
@@ -70,7 +90,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
 
             if ($now == $this->dateTimeProvider->get()) {
                 // The date didn't change therefore we assume the given offset is not valid
-                throw new \Exception($offset . ' is not a valid date/time interval.');
+                throw new \Exception($offset.' is not a valid date/time interval.');
             }
         }
 
@@ -78,11 +98,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     }
 
     /**
-     * Gets a date with the hour 00:00:00
+     * Gets a date with the hour 00:00:00.
      *
      * @param string $date
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function startOfDay($date = null)
@@ -99,11 +120,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     }
 
     /**
-     * Gets the Monday of the week for the specified date with the hour 00:00:00
+     * Gets the Monday of the week for the specified date with the hour 00:00:00.
      *
      * @param string $date
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function startOfWeek($date = null)
@@ -124,11 +146,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     }
 
     /**
-     * Gets the first day of the month for the specified date with the hour 00:00:00
+     * Gets the first day of the month for the specified date with the hour 00:00:00.
      *
      * @param string $date
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function startOfMonth($date = null)
@@ -149,11 +172,12 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     }
 
     /**
-     * Gets the first day of the year for the specified date with the hour 00:00:00
+     * Gets the first day of the year for the specified date with the hour 00:00:00.
      *
      * @param string $date
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function startOfYear($date = null)
@@ -173,7 +197,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     }
 
     /**
-     * Gets the current users' username
+     * Gets the current users' username.
      *
      * @return string
      */
@@ -183,7 +207,32 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     }
 
     /**
-     * Gets a random value between $min and $max
+     * Gets the datetime of the last login by user.
+     *
+     * @param null $userName
+     *
+     * @return \DateTime
+     *
+     * @throws \Exception
+     */
+    public function lastLogin($userName = null)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (!is_null($userName)) {
+            $userRepository = $this->entityManager->getRepository($this->userClass);
+            $user = $userRepository->findOneBy(['username' => $userName]);
+
+            if (is_null($user)) {
+                throw new \Exception('User with username "'.$userName.'" could not be found.');
+            }
+        }
+
+        return $user->getLastLogin();
+    }
+
+    /**
+     * Gets a random value between $min and $max.
      *
      * @param int $min
      * @param int $max
@@ -200,6 +249,7 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
      * @param string    $change
      *
      * @return \DateTime
+     *
      * @throws \Exception
      */
     private function modifyDate(\DateTime $date, $change)
@@ -207,9 +257,9 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
         try {
             $date->modify($change);
         } catch (\Exception $e) {
-            throw new \Exception($change . ' is not a valid date or date offset.');
+            throw new \Exception($change.' is not a valid date or date offset.');
         }
 
-        return ($date);
+        return $date;
     }
 }

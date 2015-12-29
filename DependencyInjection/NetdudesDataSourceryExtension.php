@@ -23,6 +23,7 @@ class NetdudesDataSourceryExtension extends Extension
         $processedConfiguration = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('netdudes_data_sourcery.uql.case_sensitive', $processedConfiguration["uql"]["case_sensitive"]);
+        $container->setParameter('netdudes_data_sourcery.user_class', $processedConfiguration['user_class']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
