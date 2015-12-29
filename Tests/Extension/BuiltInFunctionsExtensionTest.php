@@ -1,37 +1,43 @@
 <?php
+
 namespace Netdudes\DataSourceryBundle\Tests\Extension;
 
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityManager;
 use Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
+use Prophecy\Argument;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * This is just used to manually test the function
+     * This is just used to manually test the function.
      */
     public function testNow()
     {
         $extension = $this->getExtension();
 
         $todayResult = $extension->now(null);
-        $this->assertSame("2012-06-03T22:22:22+0200", $todayResult, 'The today function result did not produce the expected  with no offset');
+        $this->assertSame('2012-06-03T22:22:22+0200', $todayResult, 'The today function result did not produce the expected  with no offset');
 
-        $offset = "+5 days";
+        $offset = '+5 days';
         $todayResult = $extension->now($offset);
-        $this->assertSame("2012-06-08T22:22:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
+        $this->assertSame('2012-06-08T22:22:22+0200', $todayResult, 'The today function result did not produce the expected result with ofset '.$offset);
 
-        $offset = "-3 days";
+        $offset = '-3 days';
         $todayResult = $extension->now($offset);
-        $this->assertSame("2012-05-31T22:22:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
+        $this->assertSame('2012-05-31T22:22:22+0200', $todayResult, 'The today function result did not produce the expected result with ofset '.$offset);
 
-        $offset = "-6 days - 3 minutes";
+        $offset = '-6 days - 3 minutes';
         $todayResult = $extension->now($offset);
-        $this->assertSame("2012-05-28T22:19:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
+        $this->assertSame('2012-05-28T22:19:22+0200', $todayResult, 'The today function result did not produce the expected result with ofset '.$offset);
 
-        $offset = "-30 minutes";
+        $offset = '-30 minutes';
         $todayResult = $extension->now($offset);
-        $this->assertSame("2012-06-03T21:52:22+0200", $todayResult, 'The today function result did not produce the expected result with ofset ' . $offset);
+        $this->assertSame('2012-06-03T21:52:22+0200', $todayResult, 'The today function result did not produce the expected result with ofset '.$offset);
     }
 
     public function testStartOfDay()
@@ -138,18 +144,99 @@ class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('2012-01-01T00:00:00+0200', $startOfYearResult, 'The startOfYear function result did not produce the expected result');
     }
 
+    public function testCurrentUser()
+    {
+        $extension = $this->getExtensionForUserRelatedTests();
+        $currentUser = $extension->currentUser();
+        $this->assertSame('current.user', $currentUser);
+    }
+
+    public function testLastLoginWithoutProvidedUsername()
+    {
+        $extension = $this->getExtensionForUserRelatedTests();
+        $lastLoginOfCurrentUser = $extension->lastLogin();
+        $this->assertSame('2015.01.01', $lastLoginOfCurrentUser);
+    }
+
+    public function testLastLoginWithProvidedUsername()
+    {
+        $extension = $this->getExtensionForUserRelatedTests();
+        $lastLoginOfCurrentUser = $extension->lastLogin('test.user');
+        $this->assertSame('2014.01.01', $lastLoginOfCurrentUser);
+    }
+
     /**
      * @return BuiltInFunctionsExtension
      */
     private function getExtension()
     {
-        $now = new \DateTime("2012-06-03T22:22:22+0200");
+        $now = new \DateTime('2012-06-03T22:22:22+0200');
 
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $provider = $this->prophesize(CurrentDateTimeProvider::class);
         $provider->get()->willReturn($now);
-        $extension = new BuiltInFunctionsExtension($tokenStorage->reveal(), $provider->reveal());
+        $entityManager = $this->prophesize(EntityManager::class);
+        $extension = new BuiltInFunctionsExtension($tokenStorage->reveal(), $provider->reveal(), $entityManager->reveal(), 'TestUser');
 
         return $extension;
+    }
+
+    /**
+     * @return BuiltInFunctionsExtension
+     */
+    private function getExtensionForUserRelatedTests()
+    {
+        $now = new \DateTime('2012-06-03T22:22:22+0200');
+
+        $tokenStorageProphecy = $this->getTokenStorageWithCurrentUser();
+        $provider = $this->prophesize(CurrentDateTimeProvider::class);
+        $entityManagerProphecy = $this->getEntityManagerWithUserRepository();
+
+        $provider->get()->willReturn($now);
+        $extension = new BuiltInFunctionsExtension($tokenStorageProphecy->reveal(), $provider->reveal(), $entityManagerProphecy->reveal(), 'TestUser');
+
+        return $extension;
+    }
+
+    /**
+     * @return TokenStorage
+     */
+    private function getTokenStorageWithCurrentUser()
+    {
+        $currentUser = $this->prophesize(TestUser::class);
+        $currentUser->getLastLogin()->willReturn('2015.01.01');
+
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser(Argument::any())->willReturn($currentUser->reveal());
+        $token->getUsername()->willReturn('current.user');
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $tokenStorage->getToken(Argument::any())->willReturn($token);
+
+        return $tokenStorage;
+    }
+
+    /**
+     * @return EntityManager
+     */
+    private function getEntityManagerWithUserRepository()
+    {
+        $entityManager = $this->prophesize(EntityManager::class);
+
+        $userFromRepository = $this->prophesize(TestUser::class);
+        $userFromRepository->getLastLogin()->willReturn('2014.01.01');
+        $repository = $this->prophesize(ObjectRepository::class);
+        $repository->findOneBy(Argument::any())->willReturn($userFromRepository->reveal());
+        $entityManager->getRepository(Argument::any())->willReturn($repository->reveal());
+
+        return $entityManager;
+    }
+}
+class TestUser
+{
+    public function getUsername()
+    {
+    }
+    public function getLastLogin()
+    {
     }
 }
