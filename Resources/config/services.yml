@@ -28,7 +28,7 @@ services:
     netdudes_data_sourcery.uql.interpreter.factory:
         class: Netdudes\DataSourceryBundle\UQL\InterpreterFactory
         arguments:
-            - "@netdudes_data_sourcery.extension_container"
+            - "@netdudes_data_sourcery.uql_extension_container"
             - "%netdudes_data_sourcery.uql.case_sensitive%"
 
     netdudes_data_sourcery.extension.built_in_functions:
@@ -39,7 +39,7 @@ services:
         tags:
             - { name: netdudes_data_sourcery.extension }
 
-    netdudes_data_sourcery.extension_container:
+    netdudes_data_sourcery.uql_extension_container:
         class: Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer
 
     netdudes_data_sourcery.util.date_time_provider:
