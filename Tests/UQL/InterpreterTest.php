@@ -70,7 +70,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
             ->method('getFields')
             ->will($this->returnValue($dataSourceElements));
 
-        $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer')
+        $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
             ->disableOriginalConstructor()
             ->getMock();
         $interpreterFactory = new InterpreterFactory($extensionContainer);
@@ -94,7 +94,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
             ->method('getFields')
             ->will($this->returnValue([$dataSourceElement]));
 
-        $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer')
+        $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
             ->disableOriginalConstructor()
             ->getMock();
         $interpreterFactory = new InterpreterFactory($extensionContainer);
