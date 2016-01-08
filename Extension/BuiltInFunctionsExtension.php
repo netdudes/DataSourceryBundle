@@ -31,14 +31,6 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'table_bundle_extension_built_in';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
