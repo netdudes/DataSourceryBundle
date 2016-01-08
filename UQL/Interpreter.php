@@ -5,7 +5,7 @@ namespace Netdudes\DataSourceryBundle\UQL;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
-use Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer;
+use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTArray;
@@ -23,12 +23,12 @@ use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 class Interpreter
 {
     /**
-     * @var TableBundleExtensionContainer
+     * @var UqlExtensionContainer
      */
     private $extensionContainer;
 
     /**
-     * @var \Netdudes\DataSourceryBundle\DataSource\DataSourceInterface
+     * @var DataSourceInterface
      */
     private $dataSource;
 
@@ -46,11 +46,11 @@ class Interpreter
      * Constructor needs the columns descriptor to figure out appropriate filtering methods
      * and translate identifiers.
      *
-     * @param TableBundleExtensionContainer                               $extensionContainer
-     * @param \Netdudes\DataSourceryBundle\DataSource\DataSourceInterface $dataSource
-     * @param bool                                                        $caseSensitive
+     * @param UqlExtensionContainer $extensionContainer
+     * @param DataSourceInterface   $dataSource
+     * @param bool                  $caseSensitive
      */
-    public function __construct(TableBundleExtensionContainer $extensionContainer, DataSourceInterface $dataSource, $caseSensitive = true)
+    public function __construct(UqlExtensionContainer $extensionContainer, DataSourceInterface $dataSource, $caseSensitive = true)
     {
         $this->extensionContainer = $extensionContainer;
         $this->dataSource = $dataSource;

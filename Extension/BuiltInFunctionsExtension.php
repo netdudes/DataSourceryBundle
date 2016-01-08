@@ -2,11 +2,11 @@
 
 namespace Netdudes\DataSourceryBundle\Extension;
 
-use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
+use Netdudes\DataSourceryBundle\Extension\Type\UqlFunction;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class BuiltInFunctionsExtension extends AbstractTableBundleExtension
+class BuiltInFunctionsExtension implements UqlExtensionInterface
 {
     /**
      * @var TokenStorageInterface
@@ -31,24 +31,16 @@ class BuiltInFunctionsExtension extends AbstractTableBundleExtension
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'table_bundle_extension_built_in';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions()
     {
         return [
-            new TableBundleFunctionExtension('now', $this, 'now'),
-            new TableBundleFunctionExtension('startOfDay', $this, 'startOfDay'),
-            new TableBundleFunctionExtension('startOfWeek', $this, 'startOfWeek'),
-            new TableBundleFunctionExtension('startOfMonth', $this, 'startOfMonth'),
-            new TableBundleFunctionExtension('startOfYear', $this, 'startOfYear'),
-            new TableBundleFunctionExtension('currentUser', $this, 'currentUser'),
-            new TableBundleFunctionExtension('random', $this, 'random')
+            new UqlFunction('now', $this, 'now'),
+            new UqlFunction('startOfDay', $this, 'startOfDay'),
+            new UqlFunction('startOfWeek', $this, 'startOfWeek'),
+            new UqlFunction('startOfMonth', $this, 'startOfMonth'),
+            new UqlFunction('startOfYear', $this, 'startOfYear'),
+            new UqlFunction('currentUser', $this, 'currentUser'),
+            new UqlFunction('random', $this, 'random')
         ];
     }
 

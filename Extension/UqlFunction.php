@@ -4,9 +4,9 @@ namespace Netdudes\DataSourceryBundle\Extension\Type;
 
 /**
  * Wraps a definition of a callable defined in an extension,
- * available to the TableBundle to be used in UQL, etc.
+ * available to be used in UQL, etc.
  */
-class TableBundleFunctionExtension implements \JsonSerializable
+class UqlFunction implements \JsonSerializable
 {
     /**
      * Instance to which this function/method belongs
@@ -21,7 +21,7 @@ class TableBundleFunctionExtension implements \JsonSerializable
     private $method;
 
     /**
-     * Name by which this function will be known inside TableBundle/UQL
+     * Name by which this function will be known inside UQL
      *
      * @var string
      */
