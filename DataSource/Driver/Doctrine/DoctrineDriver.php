@@ -117,11 +117,11 @@ class DoctrineDriver implements DriverInterface
     }
 
     /**
-     * Helper method: gets the data corresponding to a given table column
+     * Helper method: gets the data of a defined data source field
      * from a row of the database scalar results
      *
-     * @param array                                                    $dataRow Plain array of data for a single row, from the database
-     * @param \Netdudes\DataSourceryBundle\DataSource\Configuration\Field $dataSourceField
+     * @param array $dataRow Plain array of data for a single row, from the database
+     * @param Field $dataSourceField
      *
      * @throws \Exception
      *

@@ -139,7 +139,7 @@ class ChoicesBuilder
 
         $choices = $repository->$method();
         if (!is_array($choices)) {
-            throw new \Exception('Choices repository method defined in table configurations must return array');
+            throw new \Exception('Choices repository method defined in data source configurations must return array');
         }
 
         return $choices;
@@ -156,7 +156,7 @@ class ChoicesBuilder
     {
         $choices = $callable();
         if (!is_array($choices)) {
-            throw new \Exception('Choices callback defined in table configurations must return array');
+            throw new \Exception('Choices callback defined in data source configurations must return array');
         }
 
         return $choices;

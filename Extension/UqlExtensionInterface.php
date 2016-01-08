@@ -2,8 +2,6 @@
 
 namespace Netdudes\DataSourceryBundle\Extension;
 
-use Netdudes\DataSourceryBundle\Extension\Type\UqlFunction;
-
 interface UqlExtensionInterface
 {
     /**

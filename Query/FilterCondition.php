@@ -11,9 +11,7 @@ class FilterCondition
 {
     /**
      * Filter types: standard string and numeric comparison.
-     * This set of comparison methods are understood by the AbstractQueryBuilderDataSource
-     * that ships with TableBundle, and any DataSource that wants to be easily swappable
-     * with it should implement them when filtering.
+     * This set of comparison methods are understood by any DataSource that wants to be easily swappable
      *
      * Additional filtering methods may be defined to be consumed by custom data sources.
      */

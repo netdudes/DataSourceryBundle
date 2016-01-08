@@ -9,7 +9,6 @@ use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
-use Netdudes\DataSourceryBundle\UQL\Interpreter;
 use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
 
 class InterpreterTest extends \PHPUnit_Framework_TestCase
@@ -81,7 +80,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
 
     public function testTranslateOperator()
     {
-        // Manually set the data source element, mimic what the Table would do
+        // Manually set the data source element, mimic what the data source would do
         $dataSourceElement = new Field(
             'test_data_source_element_name',
             '',
