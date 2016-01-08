@@ -166,7 +166,7 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException('Exception', 'Choices repository method defined in table configurations must return array');
+        $this->setExpectedException('Exception', "Repository method {$methodName} must return an array of choices");
         $builder->build([
             'repository' => $repositoryName,
             'method' => $methodName,
@@ -258,7 +258,7 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException('Exception', 'Choices callback defined in table configurations must return array');
+        $this->setExpectedException('Exception', 'The provided choice callback must return an array of choices');
         $builder->build($aCallable);
     }
 

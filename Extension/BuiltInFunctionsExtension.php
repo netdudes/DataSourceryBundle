@@ -2,7 +2,6 @@
 
 namespace Netdudes\DataSourceryBundle\Extension;
 
-use Netdudes\DataSourceryBundle\Extension\Type\UqlFunction;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

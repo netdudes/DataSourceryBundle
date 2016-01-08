@@ -5,7 +5,7 @@ namespace Netdudes\DataSourceryBundle\Query;
 use Netdudes\DataSourceryBundle\Util\AbstractArrayAccessibleCollection;
 
 /**
- * A collection of sorting conditions, defining a complete sort status for a table
+ * A collection of sorting conditions, defining a complete sort status for a data source
  */
 class Sort extends AbstractArrayAccessibleCollection
 {

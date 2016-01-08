@@ -1,6 +1,6 @@
 <?php
 
-namespace Netdudes\DataSourceryBundle\Extension\Type;
+namespace Netdudes\DataSourceryBundle\Extension;
 
 /**
  * Wraps a definition of a callable defined in an extension,

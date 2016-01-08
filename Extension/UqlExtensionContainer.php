@@ -4,7 +4,6 @@ namespace Netdudes\DataSourceryBundle\Extension;
 
 use Netdudes\DataSourceryBundle\Extension\Exception\FunctionNotFoundException;
 use Netdudes\DataSourceryBundle\Extension\Exception\InvalidExtensionTypeException;
-use Netdudes\DataSourceryBundle\Extension\Type\UqlFunction;
 
 class UqlExtensionContainer
 {
