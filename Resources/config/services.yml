@@ -40,7 +40,7 @@ services:
             - { name: netdudes_data_sourcery.extension }
 
     netdudes_data_sourcery.extension_container:
-        class: Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer
+        class: Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer
 
     netdudes_data_sourcery.util.date_time_provider:
         class: Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider

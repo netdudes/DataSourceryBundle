@@ -3,12 +3,12 @@
 namespace Netdudes\DataSourceryBundle\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
-use Netdudes\DataSourceryBundle\Extension\TableBundleExtensionContainer;
+use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 
 class InterpreterFactory
 {
     /**
-     * @var TableBundleExtensionContainer
+     * @var UqlExtensionContainer
      */
     private $extensionContainer;
 
@@ -18,10 +18,10 @@ class InterpreterFactory
     private $caseSensitive;
 
     /**
-     * @param TableBundleExtensionContainer $extensionContainer
-     * @param bool                          $caseSensitive
+     * @param UqlExtensionContainer $extensionContainer
+     * @param bool                  $caseSensitive
      */
-    public function __construct(TableBundleExtensionContainer $extensionContainer, $caseSensitive = true)
+    public function __construct(UqlExtensionContainer $extensionContainer, $caseSensitive = true)
     {
         $this->extensionContainer = $extensionContainer;
         $this->caseSensitive = $caseSensitive;
@@ -30,7 +30,7 @@ class InterpreterFactory
     /**
      * Builds an instance of the UQL Interpreter
      *
-     * @param \Netdudes\DataSourceryBundle\DataSource\DataSourceInterface $dataSource
+     * @param DataSourceInterface $dataSource
      *
      * @return Interpreter
      */

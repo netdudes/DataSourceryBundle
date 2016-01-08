@@ -4,22 +4,22 @@ namespace Netdudes\DataSourceryBundle\Extension;
 
 use Netdudes\DataSourceryBundle\Extension\Exception\FunctionNotFoundException;
 use Netdudes\DataSourceryBundle\Extension\Exception\InvalidExtensionTypeException;
-use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
+use Netdudes\DataSourceryBundle\Extension\Type\UqlFunction;
 
-class TableBundleExtensionContainer
+class UqlExtensionContainer
 {
     /**
-     * @var TableBundleExtensionInterface[]
+     * @var UqlExtensionInterface[]
      */
     private $extensions = [];
 
     /**
-     * @var TableBundleFunctionExtension[]
+     * @var UqlFunction[]
      */
     private $functions = [];
 
     /**
-     * @return TableBundleExtensionInterface[]
+     * @return UqlExtensionInterface[]
      */
     public function getExtensions()
     {
@@ -45,7 +45,7 @@ class TableBundleExtensionContainer
     }
 
     /**
-     * @return TableBundleFunctionExtension[]
+     * @return UqlFunction[]
      */
     public function getFunctions()
     {
@@ -55,17 +55,17 @@ class TableBundleExtensionContainer
     /**
      * Adds an extension to the container. This function is called during the compiler pass.
      *
-     * @param TableBundleExtensionInterface $extension
+     * @param UqlExtensionInterface $extension
      *
      * @throws Exception\InvalidExtensionTypeException
      */
-    public function addExtension(TableBundleExtensionInterface $extension)
+    public function addExtension(UqlExtensionInterface $extension)
     {
         $this->extensions[] = $extension;
 
         foreach ($extension->getFunctions() as $function) {
-            if (!($function instanceof TableBundleFunctionExtension)) {
-                throw new InvalidExtensionTypeException("Function extensions must be of type TableBundleFunctionExtension");
+            if (!($function instanceof UqlFunction)) {
+                throw new InvalidExtensionTypeException("Function extensions must be of type UqlFunction");
             }
             $this->functions[$function->getName()] = $function;
         }

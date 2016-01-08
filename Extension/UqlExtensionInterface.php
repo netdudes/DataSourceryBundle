@@ -2,14 +2,14 @@
 
 namespace Netdudes\DataSourceryBundle\Extension;
 
-use Netdudes\DataSourceryBundle\Extension\Type\TableBundleFunctionExtension;
+use Netdudes\DataSourceryBundle\Extension\Type\UqlFunction;
 
-interface TableBundleExtensionInterface
+interface UqlExtensionInterface
 {
     /**
      * An array of functions that will be available to use in UQL
      *
-     * @return TableBundleFunctionExtension[]
+     * @return UqlFunction[]
      */
     public function getFunctions();
 }
