@@ -4,6 +4,7 @@ namespace Netdudes\DataSourceryBundle\Tests\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
+use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
@@ -46,11 +47,11 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
 
         $filterDefinition1 = new Filter();
         $filterDefinition1->setConditionType('OR');
-        $filter1 = new FilterCondition('test_dse_1', FilterCondition::METHOD_NUMERIC_EQ, 'value1');
-        $filter2 = new FilterCondition('test_dse_2', FilterCondition::METHOD_NUMERIC_LT, 'value2');
+        $filter1 = new FilterCondition('test_dse_1', FilterCondition::METHOD_NUMERIC_EQ, 'value1', 'value1');
+        $filter2 = new FilterCondition('test_dse_2', FilterCondition::METHOD_NUMERIC_LT, 'value2', 'value2');
         $filterDefinition1[] = $filter1;
         $filterDefinition1[] = $filter2;
-        $filter3 = new FilterCondition('test_dse_3', FilterCondition::METHOD_NUMERIC_NEQ, 'value3');
+        $filter3 = new FilterCondition('test_dse_3', FilterCondition::METHOD_NUMERIC_NEQ, 'value3', 'value3');
         $filterDefinition2 = new Filter();
         $filterDefinition2->setConditionType('AND');
         $filterDefinition2[] = $filterDefinition1;
