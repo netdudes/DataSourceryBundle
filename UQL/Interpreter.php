@@ -5,6 +5,7 @@ namespace Netdudes\DataSourceryBundle\UQL;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
+use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
@@ -158,26 +159,10 @@ class Interpreter
 
             return $filterDefinition;
         } elseif ($astSubtree instanceof ASTAssertion) {
-            $dataSourceElement = $this->matchDataSourceElement($astSubtree->getIdentifier());
-            $method = $this->translateOperator($astSubtree->getOperator(), $dataSourceElement);
-            if ($astSubtree->getValue() instanceof ASTFunctionCall) {
-                $value = $this->callFunction($astSubtree->getValue());
-            } else {
-                if ($astSubtree->getOperator() == 'T_OP_IN') {
-                    // We expect an array here
-                    if (!($astSubtree->getValue() instanceof ASTArray)) {
-                        throw new UQLInterpreterException("Only arrays are valid arguments for IN statements");
-                    }
-                    $value = $this->parseArray($astSubtree->getValue()->getElements());
-                } else {
-                    $value = $this->parseValue($astSubtree->getValue());
-                }
-            }
-
-            return new FilterCondition($dataSourceElement->getUniqueName(), $method, $value);
-        } else {
-            throw new UQLInterpreterException('Unexpected Abstract Syntax Tree element');
+            return $this->getFilterCondition($astSubtree);
         }
+
+        throw new UQLInterpreterException('Unexpected Abstract Syntax Tree element');
     }
 
     /**
@@ -330,5 +315,80 @@ class Interpreter
         }
 
         return $this->dataSourceElements[$identifier];
+    }
+
+    /**
+     * @param ASTAssertion $astSubtree
+     *
+     * @return array|mixed
+     *
+     * @throws UQLInterpreterException
+     */
+    private function getValue(ASTAssertion $astSubtree)
+    {
+        if ($astSubtree->getValue() instanceof ASTFunctionCall) {
+            return $this->callFunction($astSubtree->getValue());
+        }
+
+        if ($astSubtree->getOperator() == 'T_OP_IN') {
+            if (!($astSubtree->getValue() instanceof ASTArray)) {
+                throw new UQLInterpreterException('Only arrays are valid arguments for IN statements');
+            }
+
+            return $this->parseArray($astSubtree->getValue()->getElements());
+        }
+
+        return $this->parseValue($astSubtree->getValue());
+    }
+
+    /**
+     * @param ASTAssertion $astSubtree
+     *
+     * @return FilterCondition
+     *
+     * @throws UQLInterpreterException
+     */
+    private function getFilterCondition(ASTAssertion $astSubtree)
+    {
+        $dataSourceElement = $this->matchDataSourceElement($astSubtree->getIdentifier());
+        $method = $this->translateOperator($astSubtree->getOperator(), $dataSourceElement);
+        $value = $this->getValue($astSubtree);
+
+        $valueInDatabase = $this->workoutDatabaseValue($value, $dataSourceElement);
+
+        return new FilterCondition($dataSourceElement->getUniqueName(), $method, $value, $valueInDatabase);
+    }
+
+    /**
+     * @param string $value
+     * @param Field  $dataSourceElement
+     *
+     * @return string
+     */
+    private function workoutDatabaseValue($value, Field $dataSourceElement)
+    {
+        $valueInDatabase = $value;
+
+        $dataType = $dataSourceElement->getDataType();
+        if ($dataType instanceof PercentDataType) {
+            $valueInDatabase = $this->identifyPercentDataBaseValue($value);
+        }
+
+        return $valueInDatabase;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function identifyPercentDataBaseValue($value)
+    {
+        $dividedByHundredScale = 2;
+        $positionOfSeparator = strpos($value, '.') + 1;
+        $digitsAfterSeparator = substr($value, -(strlen($value) - ($positionOfSeparator)));
+        $scale = strlen($digitsAfterSeparator) + $dividedByHundredScale;
+
+        return bcdiv($value, 100, $scale);
     }
 }

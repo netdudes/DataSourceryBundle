@@ -1,4 +1,5 @@
 <?php
+
 namespace Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder;
 
 use Doctrine\ORM\Query\Expr;
@@ -88,10 +89,9 @@ class Filterer
     }
 
     /**
-     * @param Composite      $expressions
-     * @param                $filterCondition
-     *
-     * @param QueryBuilder   $queryBuilder
+     * @param Composite    $expressions
+     * @param              $filterCondition
+     * @param QueryBuilder $queryBuilder
      *
      * @throws \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Exception\ColumnNotFoundException
      * @throws \Exception
@@ -103,7 +103,7 @@ class Filterer
         $filterMethod = $filterCondition->getMethod();
 
         // Add the filtering statement
-        $value = $filterCondition->getValue();
+        $value = $filterCondition->getValueInDatabase();
 
         // Flag to not insert the parameter if the logic requires it
         $ignoreParameter = false;
@@ -112,17 +112,17 @@ class Filterer
         $condition = $this->buildCondition($filterCondition, $token, $queryBuilder);
         $expressions->add($condition);
 
-        // Modify the value if needed
-        if ($filterMethod == FilterCondition::METHOD_STRING_LIKE) {
-            $value = str_replace('*', '%', $filterCondition->getValue());
-        }
-
         // Ignore value if needed
         if (
-            ($filterMethod == FilterCondition::METHOD_IN && count($filterCondition->getValue()) <= 0) ||
+            ($filterMethod == FilterCondition::METHOD_IN && count($value) <= 0) ||
             ($filterMethod == FilterCondition::METHOD_IS_NULL)
         ) {
             $ignoreParameter = true;
+        }
+
+        // Modify the value if needed
+        if ($filterMethod == FilterCondition::METHOD_STRING_LIKE) {
+            $value = str_replace('*', '%', $value);
         }
 
         // Insert the value substituting the token

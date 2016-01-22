@@ -8,6 +8,7 @@ use Netdudes\DataSourceryBundle\DataType\BooleanDataType;
 use Netdudes\DataSourceryBundle\DataType\DateDataType;
 use Netdudes\DataSourceryBundle\DataType\EntityDataType;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
+use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Transformers\TransformerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -168,6 +169,9 @@ class DataSourceBuilder implements DataSourceBuilderInterface
             'entity' => function () {
                 return new EntityDataType();
             },
+            'percent' => function () {
+                return new PercentDataType();
+            }
         ];
         if (!isset($map[$type])) {
             throw new InvalidDataTypeException();
