@@ -5,7 +5,6 @@ namespace Netdudes\DataSourceryBundle\UQL;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
-use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;

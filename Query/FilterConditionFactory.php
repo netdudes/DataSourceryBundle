@@ -31,13 +31,12 @@ class FilterConditionFactory
     /**
      * @param mixed  $value
      * @param string $method
-     * @param string $field
+     * @param Field  $field
      *
      * @return FilterCondition
      */
-    public function create($value, $method, $field)
+    public function create($value, $method, Field $field)
     {
-        /** @var Field $field */
         $event = new PreFilterConditionCreationEvent($value, $field->getDataType());
         $this->eventDispatcher->dispatch(
             FilterConditionEvents::PRE_CREATE,
