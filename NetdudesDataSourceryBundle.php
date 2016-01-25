@@ -3,6 +3,7 @@
 namespace Netdudes\DataSourceryBundle;
 
 use Netdudes\DataSourceryBundle\DependencyInjection\Compiler\DataSourceryBundleExtensionServicePass;
+use Netdudes\DataSourceryBundle\DependencyInjection\Compiler\FilterConditionEventSubscriberPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -12,5 +13,6 @@ class NetdudesDataSourceryBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new DataSourceryBundleExtensionServicePass());
+        $container->addCompilerPass(new FilterConditionEventSubscriberPass());
     }
 }

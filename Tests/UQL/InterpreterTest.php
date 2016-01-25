@@ -8,6 +8,7 @@ use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
 use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
@@ -15,7 +16,7 @@ use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
 class InterpreterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test the filter construction against a typical complex multilevel situation
+     * Test the filter construction against a typical complex multilevel situation.
      */
     public function testBuildFilterLevel()
     {
@@ -34,14 +35,14 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
                             'test_dse_2',
                             'T_OP_LT',
                             'value2'
-                        )
+                        ),
                     ]
                 ),
                 new ASTAssertion(
                     'test_dse_3',
                     'T_OP_NEQ',
                     'value3'
-                )
+                ),
             ]
         );
 
@@ -73,7 +74,8 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
             ->disableOriginalConstructor()
             ->getMock();
-        $interpreterFactory = new InterpreterFactory($extensionContainer);
+
+        $interpreterFactory = new InterpreterFactory($extensionContainer, new FilterConditionFactory());
         $interpreter = $interpreterFactory->create($dataSource);
 
         $this->assertEquals($expectedFilterTree, $interpreter->buildFilterLevel($astSubtree));
@@ -97,7 +99,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
             ->disableOriginalConstructor()
             ->getMock();
-        $interpreterFactory = new InterpreterFactory($extensionContainer);
+        $interpreterFactory = new InterpreterFactory($extensionContainer, new FilterConditionFactory());
         $interpreter = $interpreterFactory->create($dataSource);
 
         // LIKE is valid for String type, should return LIKE

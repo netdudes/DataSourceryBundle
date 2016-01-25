@@ -9,6 +9,7 @@ use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTArray;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTFunctionCall;
@@ -44,18 +45,30 @@ class Interpreter
     private $caseSensitive;
 
     /**
+     * @var FilterConditionFactory
+     */
+    private $filterConditionFactory;
+
+    /**
      * Constructor needs the columns descriptor to figure out appropriate filtering methods
      * and translate identifiers.
      *
-     * @param UqlExtensionContainer $extensionContainer
-     * @param DataSourceInterface   $dataSource
-     * @param bool                  $caseSensitive
+     * @param UqlExtensionContainer  $extensionContainer
+     * @param DataSourceInterface    $dataSource
+     * @param bool                   $caseSensitive
+     * @param FilterConditionFactory $filterConditionFactory
      */
-    public function __construct(UqlExtensionContainer $extensionContainer, DataSourceInterface $dataSource, $caseSensitive = true)
-    {
+    public function __construct(
+        UqlExtensionContainer $extensionContainer,
+        DataSourceInterface $dataSource,
+        FilterConditionFactory $filterConditionFactory,
+        $caseSensitive = true
+    ) {
         $this->extensionContainer = $extensionContainer;
         $this->dataSource = $dataSource;
         $this->caseSensitive = $caseSensitive;
+
+        $this->filterConditionFactory = $filterConditionFactory;
 
         // Cache an array of data sources (name => object pairs) for reference during the interpretation
         $this->dataSourceElements = array_combine(
@@ -159,7 +172,11 @@ class Interpreter
 
             return $filterDefinition;
         } elseif ($astSubtree instanceof ASTAssertion) {
-            return $this->getFilterCondition($astSubtree);
+            $field = $this->matchDataSourceElement($astSubtree->getIdentifier());
+            $method = $this->translateOperator($astSubtree->getOperator(), $field);
+            $value = $this->getValue($astSubtree);
+
+            return $this->filterConditionFactory->create($value, $method, $field);
         }
 
         throw new UQLInterpreterException('Unexpected Abstract Syntax Tree element');
@@ -339,56 +356,5 @@ class Interpreter
         }
 
         return $this->parseValue($astSubtree->getValue());
-    }
-
-    /**
-     * @param ASTAssertion $astSubtree
-     *
-     * @return FilterCondition
-     *
-     * @throws UQLInterpreterException
-     */
-    private function getFilterCondition(ASTAssertion $astSubtree)
-    {
-        $dataSourceElement = $this->matchDataSourceElement($astSubtree->getIdentifier());
-        $method = $this->translateOperator($astSubtree->getOperator(), $dataSourceElement);
-        $value = $this->getValue($astSubtree);
-
-        $valueInDatabase = $this->workoutDatabaseValue($value, $dataSourceElement);
-
-        return new FilterCondition($dataSourceElement->getUniqueName(), $method, $value, $valueInDatabase);
-    }
-
-    /**
-     * @param string $value
-     * @param Field  $dataSourceElement
-     *
-     * @return string
-     */
-    private function workoutDatabaseValue($value, Field $dataSourceElement)
-    {
-        $valueInDatabase = $value;
-
-        $dataType = $dataSourceElement->getDataType();
-        if ($dataType instanceof PercentDataType) {
-            $valueInDatabase = $this->identifyPercentDataBaseValue($value);
-        }
-
-        return $valueInDatabase;
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private function identifyPercentDataBaseValue($value)
-    {
-        $dividedByHundredScale = 2;
-        $positionOfSeparator = strpos($value, '.') + 1;
-        $digitsAfterSeparator = substr($value, -(strlen($value) - ($positionOfSeparator)));
-        $scale = strlen($digitsAfterSeparator) + $dividedByHundredScale;
-
-        return bcdiv($value, 100, $scale);
     }
 }
