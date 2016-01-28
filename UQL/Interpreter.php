@@ -54,8 +54,8 @@ class Interpreter
      *
      * @param UqlExtensionContainer  $extensionContainer
      * @param DataSourceInterface    $dataSource
-     * @param bool                   $caseSensitive
      * @param FilterConditionFactory $filterConditionFactory
+     * @param bool                   $caseSensitive
      */
     public function __construct(
         UqlExtensionContainer $extensionContainer,
@@ -65,9 +65,8 @@ class Interpreter
     ) {
         $this->extensionContainer = $extensionContainer;
         $this->dataSource = $dataSource;
-        $this->caseSensitive = $caseSensitive;
-
         $this->filterConditionFactory = $filterConditionFactory;
+        $this->caseSensitive = $caseSensitive;
 
         // Cache an array of data sources (name => object pairs) for reference during the interpretation
         $this->dataSourceElements = array_combine(
@@ -175,7 +174,7 @@ class Interpreter
             $method = $this->translateOperator($astSubtree->getOperator(), $field);
             $value = $this->getValue($astSubtree);
 
-            return $this->filterConditionFactory->create($value, $method, $field);
+            return $this->filterConditionFactory->create($field, $method, $value);
         }
 
         throw new UQLInterpreterException('Unexpected Abstract Syntax Tree element');

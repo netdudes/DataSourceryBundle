@@ -18,13 +18,13 @@ class PreFilterConditionCreationEvent extends Event
     private $value;
 
     /**
-     * @param mixed             $value
+     * @param mixed             $valueInDatabase
      * @param DataTypeInterface $dataType
      */
-    public function __construct($value, DataTypeInterface $dataType)
+    public function __construct($valueInDatabase, DataTypeInterface $dataType)
     {
         $this->dataType = $dataType;
-        $this->value = $value;
+        $this->value = $valueInDatabase;
     }
 
     /**

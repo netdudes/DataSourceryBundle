@@ -48,10 +48,3 @@ services:
 
     netdudes_data_sourcery.util.date_time_provider:
         class: Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider
-
-    netdudes_data_sourcery.query.filter_condition.event_subscriber.percenty_data_type:
-        class: Netdudes\DataSourceryBundle\Query\EventListener\PercentEventSubscriber
-        arguments:
-            - "@doctrine.orm.entity_manager"
-        tags:
-            - { name: u2.data_sourcery.filter_condition.event_subscriber }
