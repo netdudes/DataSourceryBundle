@@ -1,5 +1,4 @@
 <?php
-
 namespace Netdudes\DataSourceryBundle\Tests\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
@@ -7,6 +6,7 @@ use Netdudes\DataSourceryBundle\DataType\NumberDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
 use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
@@ -14,9 +14,9 @@ use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
 class InterpreterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test the filter construction against a typical complex multilevel situation
+     * Test the filter construction against a typical complex multilevel situation.
      */
-    public function testBuildFilterLevel()
+    public function testBuildFilter()
     {
         $astSubtree = new ASTGroup(
             'T_LOGIC_AND',
@@ -33,30 +33,30 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
                             'test_dse_2',
                             'T_OP_LT',
                             'value2'
-                        )
+                        ),
                     ]
                 ),
                 new ASTAssertion(
                     'test_dse_3',
                     'T_OP_NEQ',
                     'value3'
-                )
+                ),
             ]
         );
 
         $filterDefinition1 = new Filter();
         $filterDefinition1->setConditionType('OR');
-        $filter1 = new FilterCondition('test_dse_1', FilterCondition::METHOD_NUMERIC_EQ, 'value1');
-        $filter2 = new FilterCondition('test_dse_2', FilterCondition::METHOD_NUMERIC_LT, 'value2');
+        $filter1 = new FilterCondition('test_dse_1', FilterCondition::METHOD_NUMERIC_EQ, 'value1', 'value1');
+        $filter2 = new FilterCondition('test_dse_2', FilterCondition::METHOD_NUMERIC_LT, 'value2', 'value2');
         $filterDefinition1[] = $filter1;
         $filterDefinition1[] = $filter2;
-        $filter3 = new FilterCondition('test_dse_3', FilterCondition::METHOD_NUMERIC_NEQ, 'value3');
+        $filter3 = new FilterCondition('test_dse_3', FilterCondition::METHOD_NUMERIC_NEQ, 'value3', 'value3');
         $filterDefinition2 = new Filter();
         $filterDefinition2->setConditionType('AND');
         $filterDefinition2[] = $filterDefinition1;
         $filterDefinition2[] = $filter3;
 
-        $expectedFilterTree = $filterDefinition2;
+        $expectedFilter = $filterDefinition2;
 
         $dataSourceElements = [
             new Field('test_dse_1', '', '', new NumberDataType()),
@@ -72,10 +72,12 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
             ->disableOriginalConstructor()
             ->getMock();
-        $interpreterFactory = new InterpreterFactory($extensionContainer);
+
+        $interpreterFactory = new InterpreterFactory($extensionContainer, new FilterConditionFactory());
         $interpreter = $interpreterFactory->create($dataSource);
 
-        $this->assertEquals($expectedFilterTree, $interpreter->buildFilterLevel($astSubtree));
+        $actualFilter = $interpreter->buildFilter($astSubtree);
+        $this->assertEquals($expectedFilter, $actualFilter);
     }
 
     public function testTranslateOperator()
@@ -96,7 +98,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
             ->disableOriginalConstructor()
             ->getMock();
-        $interpreterFactory = new InterpreterFactory($extensionContainer);
+        $interpreterFactory = new InterpreterFactory($extensionContainer, new FilterConditionFactory());
         $interpreter = $interpreterFactory->create($dataSource);
 
         // LIKE is valid for String type, should return LIKE

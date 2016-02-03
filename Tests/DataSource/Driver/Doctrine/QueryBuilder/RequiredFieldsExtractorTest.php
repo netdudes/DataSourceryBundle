@@ -70,7 +70,7 @@ class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
      */
     protected function buildQuery()
     {
-        $filter = new Filter([new FilterCondition('TEST_FIELD_6_REQUIRED_BY_FILTER', FilterCondition::METHOD_STRING_EQ, 'TEST_VALUE')]);
+        $filter = new Filter([new FilterCondition('TEST_FIELD_6_REQUIRED_BY_FILTER', FilterCondition::METHOD_STRING_EQ, 'TEST_VALUE', 'TEST_VALUE')]);
         $sort = new Sort([new SortCondition('TEST_FIELD_7_REQUIRED_BY_SORT', null, SortCondition::ASC)]);
 
         $query = new Query();

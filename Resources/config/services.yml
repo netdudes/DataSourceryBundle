@@ -29,7 +29,11 @@ services:
         class: Netdudes\DataSourceryBundle\UQL\InterpreterFactory
         arguments:
             - "@netdudes_data_sourcery.uql_extension_container"
+            - "@netdudes_data_sourcery.query.filter_condition_factory"
             - "%netdudes_data_sourcery.uql.case_sensitive%"
+
+    netdudes_data_sourcery.query.filter_condition_factory:
+        class: Netdudes\DataSourceryBundle\Query\FilterConditionFactory
 
     netdudes_data_sourcery.extension.built_in_functions:
         class: Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension

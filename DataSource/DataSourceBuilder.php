@@ -8,6 +8,7 @@ use Netdudes\DataSourceryBundle\DataType\BooleanDataType;
 use Netdudes\DataSourceryBundle\DataType\DateDataType;
 use Netdudes\DataSourceryBundle\DataType\EntityDataType;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
+use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Transformers\TransformerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -147,33 +148,28 @@ class DataSourceBuilder implements DataSourceBuilderInterface
      *
      * @param $type
      *
-     * @return mixed
      * @throws InvalidDataTypeException
+     *
+     * @return mixed
      */
     private function getDataTypeByName($type)
     {
-        $map = [
-            'date' => function () {
+        switch ($type) {
+            case 'date':
                 return new DateDataType();
-            },
-            'string' => function () {
+            case 'string':
                 return new StringDataType();
-            },
-            'number' => function () {
+            case 'number':
                 return new NumberDataType();
-            },
-            'boolean' => function () {
-                return new BooleanDataType();
-            },
-            'entity' => function () {
+            case 'boolean':
+                return new  BooleanDataType();
+            case 'entity':
                 return new EntityDataType();
-            },
-        ];
-        if (!isset($map[$type])) {
-            throw new InvalidDataTypeException();
+            case 'percent':
+                return new PercentDataType();
+            default:
+                throw new InvalidDataTypeException();
         }
-
-        return $map[$type]();
     }
 
     private function newNativeField($name, $type, $alias, $options)

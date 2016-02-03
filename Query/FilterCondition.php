@@ -38,34 +38,41 @@ class FilterCondition
     /**
      * Column ID to filter by
      *
-     * @var
+     * @var string
      */
     private $fieldName;
 
     /**
      * Filtering method, of those defined in this class' constants
      *
-     * @var
+     * @var string
      */
     private $method;
 
     /**
      * A value to filter by
      *
-     * @var
+     * @var mixed
      */
     private $value;
+
+    /**
+     * @var mixed
+     */
+    private $valueInDatabase;
 
     /**
      * @param $columnIdentifier  string The unique identifier of the column to filter by
      * @param $method            string A value  passed to the data source in order to decide how to filter
      * @param $value             string The value to filter with
+     * @param $valueInDatabase   string The presentation of the filtered value inside the database
      */
-    public function __construct($columnIdentifier, $method, $value)
+    public function __construct($columnIdentifier, $method, $value, $valueInDatabase)
     {
         $this->fieldName = $columnIdentifier;
         $this->method = $method;
         $this->value = $value;
+        $this->valueInDatabase = $valueInDatabase;
     }
 
     /**
@@ -174,5 +181,21 @@ class FilterCondition
     public function setMethod($method)
     {
         $this->method = $method;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValueInDatabase()
+    {
+        return $this->valueInDatabase;
+    }
+
+    /**
+     * @param mixed $valueInDatabase
+     */
+    public function setValueInDatabase($valueInDatabase)
+    {
+        $this->valueInDatabase = $valueInDatabase;
     }
 }

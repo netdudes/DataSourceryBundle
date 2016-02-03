@@ -63,7 +63,7 @@ class Filter extends AbstractArrayAccessibleCollection implements \JsonSerializa
             return $filter;
         } elseif (count($jsonSerializable) == 3) {
             // Simple element
-            return new FilterCondition($jsonSerializable[0], $jsonSerializable[1], $jsonSerializable[2]);
+            return new FilterCondition($jsonSerializable[0], $jsonSerializable[1], $jsonSerializable[2], $jsonSerializable[2]);
         }
 
         throw new \Exception('Unable to parse JSON-serializable filter structure');
