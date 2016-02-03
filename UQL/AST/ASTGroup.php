@@ -1,13 +1,10 @@
 <?php
-
 namespace Netdudes\DataSourceryBundle\UQL\AST;
 
 /**
  * Class ASTGroup
  *
  * Abstract Syntax Tree node representing a Group of <assertions> with a <logic> between them.
- *
- * @package Netdudes\NetdudesDataSourceryBundle\UQL\AST
  */
 class ASTGroup
 {
@@ -26,7 +23,9 @@ class ASTGroup
     }
 
     /**
-     * @return mixed
+     * $elements can be an array out of ASTGroup and ASTAssertion
+     *
+     * @return array
      */
     public function getElements()
     {
@@ -34,7 +33,9 @@ class ASTGroup
     }
 
     /**
-     * @param mixed $elements
+     * $elements can be an array out of ASTGroup and ASTAssertion
+     *
+     * @param array $elements
      */
     public function setElements($elements)
     {
@@ -42,7 +43,7 @@ class ASTGroup
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLogic()
     {
@@ -50,7 +51,7 @@ class ASTGroup
     }
 
     /**
-     * @param mixed $logic
+     * @param string $logic
      */
     public function setLogic($logic)
     {

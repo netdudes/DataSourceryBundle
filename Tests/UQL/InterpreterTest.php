@@ -1,10 +1,8 @@
 <?php
-
 namespace Netdudes\DataSourceryBundle\Tests\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
-use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
@@ -18,7 +16,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the filter construction against a typical complex multilevel situation.
      */
-    public function testBuildFilterLevel()
+    public function testBuildFilter()
     {
         $astSubtree = new ASTGroup(
             'T_LOGIC_AND',
@@ -58,7 +56,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $filterDefinition2[] = $filterDefinition1;
         $filterDefinition2[] = $filter3;
 
-        $expectedFilterTree = $filterDefinition2;
+        $expectedFilter = $filterDefinition2;
 
         $dataSourceElements = [
             new Field('test_dse_1', '', '', new NumberDataType()),
@@ -78,7 +76,8 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $interpreterFactory = new InterpreterFactory($extensionContainer, new FilterConditionFactory());
         $interpreter = $interpreterFactory->create($dataSource);
 
-        $this->assertEquals($expectedFilterTree, $interpreter->buildFilterLevel($astSubtree));
+        $actualFilter = $interpreter->buildFilter($astSubtree);
+        $this->assertEquals($expectedFilter, $actualFilter);
     }
 
     public function testTranslateOperator()

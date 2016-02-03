@@ -148,36 +148,28 @@ class DataSourceBuilder implements DataSourceBuilderInterface
      *
      * @param $type
      *
-     * @return mixed
      * @throws InvalidDataTypeException
+     *
+     * @return mixed
      */
     private function getDataTypeByName($type)
     {
-        $map = [
-            'date' => function () {
+        switch ($type) {
+            case 'date':
                 return new DateDataType();
-            },
-            'string' => function () {
+            case 'string':
                 return new StringDataType();
-            },
-            'number' => function () {
+            case 'number':
                 return new NumberDataType();
-            },
-            'boolean' => function () {
-                return new BooleanDataType();
-            },
-            'entity' => function () {
+            case 'boolean':
+                return new  BooleanDataType();
+            case 'entity':
                 return new EntityDataType();
-            },
-            'percent' => function () {
+            case 'percent':
                 return new PercentDataType();
-            }
-        ];
-        if (!isset($map[$type])) {
-            throw new InvalidDataTypeException();
+            default:
+                throw new InvalidDataTypeException();
         }
-
-        return $map[$type]();
     }
 
     private function newNativeField($name, $type, $alias, $options)

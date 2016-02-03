@@ -1,5 +1,4 @@
 <?php
-
 namespace Netdudes\DataSourceryBundle\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
@@ -18,8 +17,7 @@ use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 /**
  * Class Interpreter
  *
- * The Interpreter transforms the generic Abstract Syntax Tree into
- * the specific FilterDefinition elements.
+ * The Interpreter transforms the generic Abstract Syntax Tree into Filters
  */
 class Interpreter
 {
@@ -122,59 +120,45 @@ class Interpreter
     /**
      * Generate the filter objects corresponding to a UQL string.
      *
-     * @param $UQLStringInput
+     * @param string $uql
      *
      * @return Filter
      */
-    public function generateFilters($UQLStringInput)
+    public function interpret($uql)
     {
-        if (empty(trim($UQLStringInput))) {
+        if (empty(trim($uql))) {
             return new Filter();
         }
 
-        // Get the Abstract Syntax Tree of the input from the parser
         $parser = new Parser();
-        $AST = $parser->parse($UQLStringInput);
+        $AST = $parser->parse($uql);
 
-        // Recursively translate into filters.
-        $filters = $this->buildFilterLevel($AST);
-
-        if ($filters instanceof FilterCondition) {
-            // Single filter. Wrap into dummy filter collection for consistency.
-            $filterDefinition = new Filter();
-            $filterDefinition[] = $filters;
-            $filters = $filterDefinition;
-        }
-
-        return $filters;
+        return $this->buildFilter($AST);
     }
 
     /**
      * Transforms a subtree of the AST into a concrete filter definition.
      * This function recursively builds all sub-trees.
      *
-     * @param $astSubtree
+     * @param ASTGroup|ASTAssertion|mixed $astSubtree
      *
-     * @return Filter|Filter
+     * TODO: make private
+     *
+     * @return Filter|FilterCondition
      * @throws \Exception
      */
-    public function buildFilterLevel($astSubtree)
+    public function buildFilter($astSubtree)
     {
         if ($astSubtree instanceof ASTGroup) {
-            $filterDefinition = new Filter();
-            $condition = $this->translateLogic($astSubtree->getLogic());
-            $filterDefinition->setConditionType($condition);
-            foreach ($astSubtree->getElements() as $element) {
-                $filterDefinition[] = $this->buildFilterLevel($element);
-            }
+            return $this->buildFilterFromAstGroup($astSubtree);
+        }
 
-            return $filterDefinition;
-        } elseif ($astSubtree instanceof ASTAssertion) {
-            $field = $this->matchDataSourceElement($astSubtree->getIdentifier());
-            $method = $this->translateOperator($astSubtree->getOperator(), $field);
-            $value = $this->getValue($astSubtree);
-
-            return $this->filterConditionFactory->create($field, $method, $value);
+        if ($astSubtree instanceof ASTAssertion) {
+            $filterCondition = $this->buildFilterConditionFromAstAssertion($astSubtree);
+            // Single filter. Wrap into dummy filter collection for consistency.
+            $filter = new Filter();
+            $filter[] = $filterCondition;
+            return $filter;
         }
 
         throw new UQLInterpreterException('Unexpected Abstract Syntax Tree element');
@@ -183,7 +167,7 @@ class Interpreter
     /**
      * Translate <operator> tokens into Filter Methods.
      *
-     * @param                          $token
+     * @param string         $token
      * @param FieldInterface $dataSourceElement
      *
      * @throws Exception\UQLInterpreterException
@@ -254,10 +238,10 @@ class Interpreter
      *
      * @param $token
      *
-     * @return mixed
+     * @return string
      * @throws \Exception
      */
-    protected function translateLogic($token)
+    private function translateLogic($token)
     {
         $translationTable = [
             "T_LOGIC_AND" => Filter::CONDITION_TYPE_AND,
@@ -279,7 +263,7 @@ class Interpreter
      *
      * @return mixed
      */
-    protected function parseValue($value)
+    private function parseValue($value)
     {
         if (is_bool($value)) {
             return $value ? "1" : "0";
@@ -303,6 +287,11 @@ class Interpreter
         }
     }
 
+    /**
+     * @param array $elements
+     *
+     * @return array
+     */
     private function parseArray($elements)
     {
         $array = [];
@@ -314,7 +303,7 @@ class Interpreter
     }
 
     /**
-     * @param $identifier
+     * @param string $identifier
      *
      * @return Field
      * @throws UQLInterpreterException
@@ -335,9 +324,9 @@ class Interpreter
     /**
      * @param ASTAssertion $astSubtree
      *
-     * @return array|mixed
-     *
      * @throws UQLInterpreterException
+     *
+     * @return array|mixed
      */
     private function getValue(ASTAssertion $astSubtree)
     {
@@ -354,5 +343,46 @@ class Interpreter
         }
 
         return $this->parseValue($astSubtree->getValue());
+    }
+
+    /**
+     * @param ASTAssertion $astSubtree
+     *
+     * @throws UQLInterpreterException
+     *
+     * @return FilterCondition
+     */
+    private function buildFilterConditionFromAstAssertion(ASTAssertion $astSubtree)
+    {
+        $field = $this->matchDataSourceElement($astSubtree->getIdentifier());
+        $method = $this->translateOperator($astSubtree->getOperator(), $field);
+        $value = $this->getValue($astSubtree);
+
+        return $this->filterConditionFactory->create($field, $method, $value);
+    }
+
+    /**
+     * @param ASTGroup $astSubtree
+     *
+     * @throws UQLInterpreterException
+     * @throws \Exception
+     *
+     * @return Filter
+     */
+    private function buildFilterFromAstGroup(ASTGroup $astSubtree)
+    {
+        $filter = new Filter();
+        $condition = $this->translateLogic($astSubtree->getLogic());
+        $filter->setConditionType($condition);
+        foreach ($astSubtree->getElements() as $element) {
+            if ($element instanceof ASTGroup) {
+                $filter[] = $this->buildFilterFromAstGroup($element);
+            }
+            if ($element instanceof ASTAssertion) {
+                $filter[] = $this->buildFilterConditionFromAstAssertion($element);
+            }
+        }
+
+        return $filter;
     }
 }

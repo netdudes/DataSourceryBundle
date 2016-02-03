@@ -1,13 +1,10 @@
 <?php
-
 namespace Netdudes\DataSourceryBundle\UQL\AST;
 
 /**
  * Class ASTAssertion
  *
  * Abstract Syntax Tree node representing a combination a <assertion> on the language.
- *
- * @package Netdudes\NetdudesDataSourceryBundle\UQL\AST
  */
 class ASTAssertion
 {

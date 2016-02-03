@@ -1,5 +1,4 @@
 <?php
-
 namespace Netdudes\DataSourceryBundle\DataType;
 
 use Netdudes\DataSourceryBundle\Query\FilterCondition;

@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class FilterConditionEventSubscriberPass implements CompilerPassInterface
+class InterpreterEventSubscriberPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
@@ -19,7 +19,7 @@ class FilterConditionEventSubscriberPass implements CompilerPassInterface
 
         $filterConditionFactory = $container->getDefinition('netdudes_data_sourcery.query.filter_condition_factory');
 
-        foreach ($container->findTaggedServiceIds('u2.data_sourcery.filter_condition.event_subscriber') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('data_sourcery.interpreter.event_subscriber') as $id => $attributes) {
             $filterConditionFactory->addMethodCall('registerEventSubscriber', [new Reference($id)]);
         }
     }

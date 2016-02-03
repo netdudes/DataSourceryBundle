@@ -2,8 +2,8 @@
 namespace Netdudes\DataSourceryBundle\Query;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
-use Netdudes\DataSourceryBundle\Query\Event\PreFilterConditionCreationEvent;
-use Netdudes\DataSourceryBundle\Query\Event\FilterConditionEvents;
+use Netdudes\DataSourceryBundle\UQL\Event\InterpreterEvents;
+use Netdudes\DataSourceryBundle\UQL\Event\PreCreateFilterConditionEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -37,12 +37,13 @@ class FilterConditionFactory
      */
     public function create(Field $field, $method, $value)
     {
-        $event = new PreFilterConditionCreationEvent($value, $field->getDataType());
+        $event = new PreCreateFilterConditionEvent($field->getDataType(), $value);
         $this->eventDispatcher->dispatch(
-            FilterConditionEvents::PRE_CREATE,
+            InterpreterEvents::PRE_CREATE_FILTER_CONDITION,
             $event
         );
+        $databaseValue = $event->getDatabaseValue();
 
-        return new FilterCondition($field->getUniqueName(), $method, $value, $event->getValue());
+        return new FilterCondition($field->getUniqueName(), $method, $value, $databaseValue);
     }
 }

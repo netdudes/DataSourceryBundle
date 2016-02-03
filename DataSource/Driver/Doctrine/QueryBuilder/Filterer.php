@@ -103,9 +103,9 @@ class Filterer
         $filterMethod = $filterCondition->getMethod();
 
         // Add the filtering statement
-        $value = $filterCondition->getValueInDatabase();
+        $valueInDatabase = $filterCondition->getValueInDatabase();
 
-        // Flag to not insert the parameter if the logic requires it
+        // Flag to not insert the parameter if# the logic requires it
         $ignoreParameter = false;
 
         // Depending on the filter type, create a condition
@@ -114,7 +114,7 @@ class Filterer
 
         // Ignore value if needed
         if (
-            ($filterMethod == FilterCondition::METHOD_IN && count($value) <= 0) ||
+            ($filterMethod == FilterCondition::METHOD_IN && count($valueInDatabase) <= 0) ||
             ($filterMethod == FilterCondition::METHOD_IS_NULL)
         ) {
             $ignoreParameter = true;
@@ -122,12 +122,12 @@ class Filterer
 
         // Modify the value if needed
         if ($filterMethod == FilterCondition::METHOD_STRING_LIKE) {
-            $value = str_replace('*', '%', $value);
+            $valueInDatabase = str_replace('*', '%', $valueInDatabase);
         }
 
         // Insert the value substituting the token
         if (!$ignoreParameter) {
-            $queryBuilder->setParameter($token, $value);
+            $queryBuilder->setParameter($token, $valueInDatabase);
         }
     }
 
