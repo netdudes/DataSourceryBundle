@@ -150,11 +150,11 @@ class Interpreter
     public function buildFilter($astSubtree)
     {
         if ($astSubtree instanceof ASTGroup) {
-            return $this->buildFilterFromAstGroup($astSubtree);
+            return $this->buildFilterFromASTGroup($astSubtree);
         }
 
         if ($astSubtree instanceof ASTAssertion) {
-            $filterCondition = $this->buildFilterConditionFromAstAssertion($astSubtree);
+            $filterCondition = $this->buildFilterConditionFromASTAssertion($astSubtree);
             // Single filter. Wrap into dummy filter collection for consistency.
             $filter = new Filter();
             $filter[] = $filterCondition;
@@ -352,7 +352,7 @@ class Interpreter
      *
      * @return FilterCondition
      */
-    private function buildFilterConditionFromAstAssertion(ASTAssertion $astSubtree)
+    private function buildFilterConditionFromASTAssertion(ASTAssertion $astSubtree)
     {
         $field = $this->matchDataSourceElement($astSubtree->getIdentifier());
         $method = $this->translateOperator($astSubtree->getOperator(), $field);
@@ -369,17 +369,17 @@ class Interpreter
      *
      * @return Filter
      */
-    private function buildFilterFromAstGroup(ASTGroup $astSubtree)
+    private function buildFilterFromASTGroup(ASTGroup $astSubtree)
     {
         $filter = new Filter();
         $condition = $this->translateLogic($astSubtree->getLogic());
         $filter->setConditionType($condition);
         foreach ($astSubtree->getElements() as $element) {
             if ($element instanceof ASTGroup) {
-                $filter[] = $this->buildFilterFromAstGroup($element);
+                $filter[] = $this->buildFilterFromASTGroup($element);
             }
             if ($element instanceof ASTAssertion) {
-                $filter[] = $this->buildFilterConditionFromAstAssertion($element);
+                $filter[] = $this->buildFilterConditionFromASTAssertion($element);
             }
         }
 

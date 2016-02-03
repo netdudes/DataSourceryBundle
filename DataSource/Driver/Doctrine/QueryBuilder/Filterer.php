@@ -105,7 +105,7 @@ class Filterer
         // Add the filtering statement
         $valueInDatabase = $filterCondition->getValueInDatabase();
 
-        // Flag to not insert the parameter if# the logic requires it
+        // Flag to not insert the parameter if the logic requires it
         $ignoreParameter = false;
 
         // Depending on the filter type, create a condition
