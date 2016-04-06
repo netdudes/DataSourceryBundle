@@ -7,6 +7,7 @@ use Doctrine\ORM\Query\Expr\Andx;
 use Doctrine\ORM\Query\Expr\Composite;
 use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
+use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Exception\ColumnNotFoundException;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
@@ -23,9 +24,7 @@ class Filterer
      *
      * @param QueryBuilder $queryBuilder
      * @param Filter       $filterDefinition
-     *
-     * @param              $selectFieldsMap
-     * @param              $fields
+     * @param array        $uniqueNameToQueryFieldMap
      *
      * @return QueryBuilder
      * @throws \Exception
@@ -70,7 +69,6 @@ class Filterer
 
     /**
      * @param Composite    $expressions
-     *
      * @param Filter       $filterDefinition
      * @param QueryBuilder $queryBuilder
      *
@@ -89,11 +87,11 @@ class Filterer
     }
 
     /**
-     * @param Composite    $expressions
-     * @param              $filterCondition
-     * @param QueryBuilder $queryBuilder
+     * @param Composite       $expressions
+     * @param FilterCondition $filterCondition
+     * @param QueryBuilder    $queryBuilder
      *
-     * @throws \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Exception\ColumnNotFoundException
+     * @throws ColumnNotFoundException
      * @throws \Exception
      */
     protected function addExpressionsForFilterCondition(Composite $expressions, FilterCondition $filterCondition, QueryBuilder $queryBuilder)
@@ -133,10 +131,10 @@ class Filterer
 
     /**
      * @param FilterCondition $filterCondition
-     * @param                 $token
+     * @param string          $token
      * @param QueryBuilder    $queryBuilder
      *
-     * @throws \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Exception\ColumnNotFoundException
+     * @throws ColumnNotFoundException
      * @throws \Exception
      *
      * @return Expr|string
@@ -147,74 +145,78 @@ class Filterer
         $identifier = $this->uniqueNameToQueryFieldMap[$filterCondition->getFieldName()];
         $value = $filterCondition->getValue();
 
-        if ($filterMethod == FilterCondition::METHOD_STRING_LIKE) {
-            return $queryBuilder->expr()->like($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_STRING_EQ ||
-            $filterMethod == FilterCondition::METHOD_NUMERIC_EQ ||
-            $filterMethod == FilterCondition::METHOD_BOOLEAN ||
-            $filterMethod == FilterCondition::METHOD_DATETIME_EQ
-        ) {
-            return $queryBuilder->expr()->eq($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_NUMERIC_GT || $filterMethod == FilterCondition::METHOD_DATETIME_GT) {
-            return $queryBuilder->expr()->gt($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_NUMERIC_GTE || $filterMethod == FilterCondition::METHOD_DATETIME_GTE) {
-            return $queryBuilder->expr()->gte($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_NUMERIC_EQ || $filterMethod == FilterCondition::METHOD_DATETIME_EQ) {
-            return $queryBuilder->expr()->eq($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_NUMERIC_LTE || $filterMethod == FilterCondition::METHOD_DATETIME_LTE) {
-            return $queryBuilder->expr()->lte($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_NUMERIC_LT || $filterMethod == FilterCondition::METHOD_DATETIME_LT) {
-            return $queryBuilder->expr()->lt($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_STRING_NEQ || $filterMethod == FilterCondition::METHOD_NUMERIC_NEQ || $filterMethod == FilterCondition::METHOD_DATETIME_NEQ) {
-            return $queryBuilder->expr()->neq($identifier, $token);
-        } elseif ($filterMethod == FilterCondition::METHOD_IN) {
-            if (!is_array($value)) {
-                throw new \Exception('Only arrays can be arguments of a METHOD_IN filter');
-            }
+        switch ($filterMethod) {
+            case FilterCondition::METHOD_STRING_LIKE:
+                return $queryBuilder->expr()->like($identifier, $token);
+            case FilterCondition::METHOD_STRING_EQ:
+            case FilterCondition::METHOD_NUMERIC_EQ:
+            case FilterCondition::METHOD_BOOLEAN:
+            case FilterCondition::METHOD_DATETIME_EQ:
+                return $queryBuilder->expr()->eq($identifier, $token);
+            case FilterCondition::METHOD_NUMERIC_GT:
+            case FilterCondition::METHOD_DATETIME_GT:
+                return $queryBuilder->expr()->gt($identifier, $token);
+            case FilterCondition::METHOD_NUMERIC_GTE:
+            case FilterCondition::METHOD_DATETIME_GTE:
+                return $queryBuilder->expr()->gte($identifier, $token);
+            case FilterCondition::METHOD_NUMERIC_LTE:
+            case FilterCondition::METHOD_DATETIME_LTE:
+                return $queryBuilder->expr()->lte($identifier, $token);
+            case FilterCondition::METHOD_NUMERIC_LT:
+            case FilterCondition::METHOD_DATETIME_LT:
+                return $queryBuilder->expr()->lt($identifier, $token);
+            case FilterCondition::METHOD_STRING_NEQ:
+            case FilterCondition::METHOD_NUMERIC_NEQ:
+            case FilterCondition::METHOD_DATETIME_NEQ:
+                return $queryBuilder->expr()->neq($identifier, $token);
+            case FilterCondition::METHOD_IN:
+                if (!is_array($value)) {
+                    throw new \Exception('Only arrays can be arguments of a METHOD_IN filter');
+                }
 
-            if (count($filterCondition->getValue()) > 0) {
-                return $queryBuilder->expr()->in($identifier, $token);
-            }
-            // The array is empty, therefore this will always be "false". We use an always-false expression
-            // to emulate this without actually using an invalid empty array in the IN statement.
-            return '1=2';
-        } elseif ($filterMethod == FilterCondition::METHOD_IS_NULL) {
-            if ($filterCondition->getValue()) {
-                return $queryBuilder->expr()->isNull($identifier);
-            }
+                if (count($filterCondition->getValue()) > 0) {
+                    return $queryBuilder->expr()->in($identifier, $token);
+                }
+                // The array is empty, therefore this will always be "false". We use an always-false expression
+                // to emulate this without actually using an invalid empty array in the IN statement.
+                return '1=2';
+            case FilterCondition::METHOD_IS_NULL:
+                if ($filterCondition->getValue()) {
+                    return $queryBuilder->expr()->isNull($identifier);
+                }
 
-            return $queryBuilder->expr()->isNotNull($identifier);
-        } else {
-            throw new \Exception("Unknown filtering method \"$filterMethod\" for column \"" . $filterCondition->getFieldName() . '"');
+                return $queryBuilder->expr()->isNotNull($identifier);
+            default:
+                throw new \Exception("Unknown filtering method \"$filterMethod\" for column \"" . $filterCondition->getFieldName() . '"');
         }
     }
 
     /**
-     * @param              $filterCondition
-     * @param QueryBuilder $queryBuilder
+     * @param FilterCondition $filterCondition
+     * @param QueryBuilder    $queryBuilder
      *
      * @return string
-     * @throws \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Exception\ColumnNotFoundException
+     * @throws ColumnNotFoundException
      */
     protected function buildUniqueToken(FilterCondition $filterCondition, QueryBuilder $queryBuilder)
     {
         return ':token_'
-        . strtolower(str_replace(['.', '-'], '_', $filterCondition->getFieldName()))
-        . '_' . $queryBuilder->getParameters()->count();
+            . strtolower(str_replace(['.', '-'], '_', $filterCondition->getFieldName()))
+            . '_' . $queryBuilder->getParameters()->count();
     }
 
     /**
      * Helper method: transforms a column identifier to a database field for use
      * in filtering and sorting
      *
-     * @param   $dataSourceFieldUniqueName
+     * @param array|Field[] $fields
+     * @param string        $dataSourceFieldUniqueName
      *
-     * @throws \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Exception\ColumnNotFoundException
+     * @throws ColumnNotFoundException
      * @return mixed
      */
-    protected function getDatabaseFilterQueryFieldByDataSourceFieldUniqueName($fields, $dataSourceFieldUniqueName)
+    protected function getDatabaseFilterQueryFieldByDataSourceFieldUniqueName(array $fields, $dataSourceFieldUniqueName)
     {
-        /** @var $dataSourceField \Netdudes\DataSourceryBundle\DataSource\Configuration\Field */
         $dataSourceField = null;
         foreach ($fields as $field) {
             if ($field->getUniqueName() == $dataSourceFieldUniqueName) {

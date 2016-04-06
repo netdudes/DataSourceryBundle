@@ -43,17 +43,17 @@ class Builder
     protected $selectFieldsMap = [];
 
     /**
-     * @var \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\RequiredFieldsExtractor
+     * @var RequiredFieldsExtractor
      */
     protected $requiredFieldsExtractor;
 
     /**
-     * @var \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\JoinGenerator
+     * @var JoinGenerator
      */
     protected $joinGenerator;
 
     /**
-     * @var \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\SelectGenerator
+     * @var SelectGenerator
      */
     protected $selectGenerator;
 
@@ -69,7 +69,7 @@ class Builder
 
     /**
      * @param DataSourceInterface $dataSource
-     * @param EntityManager             $entityManager
+     * @param EntityManager       $entityManager
      */
     public function __construct(DataSourceInterface $dataSource, EntityManager $entityManager)
     {
@@ -95,7 +95,7 @@ class Builder
      *
      * @param Query $query
      *
-     * @return QueryBuilder|null
+     * @return QueryBuilder
      */
     public function buildQueryBuilder(Query $query, $entityClass)
     {

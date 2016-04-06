@@ -32,7 +32,7 @@ class DataSourceBuilder implements DataSourceBuilderInterface
     private $transformers = [];
 
     /**
-     * @var \Netdudes\DataSourceryBundle\DataSource\Configuration\Field[]
+     * @var Field[]
      */
     private $nativeFields = [];
 
@@ -52,9 +52,10 @@ class DataSourceBuilder implements DataSourceBuilderInterface
     private $dataSourceFactory;
 
     /**
-     * @param                          $entityClass
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ChoicesBuilder           $choicesBuilder
+     * @param string                     $entityClass
+     * @param EventDispatcherInterface   $eventDispatcher
+     * @param DataSourceFactoryInterface $dataSourceFactory
+     * @param ChoicesBuilder             $choicesBuilder
      */
     public function __construct($entityClass, EventDispatcherInterface $eventDispatcher, DataSourceFactoryInterface $dataSourceFactory, ChoicesBuilder $choicesBuilder)
     {
@@ -162,7 +163,7 @@ class DataSourceBuilder implements DataSourceBuilderInterface
             case 'number':
                 return new NumberDataType();
             case 'boolean':
-                return new  BooleanDataType();
+                return new BooleanDataType();
             case 'entity':
                 return new EntityDataType();
             case 'percent':
