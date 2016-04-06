@@ -39,6 +39,14 @@ interface DataSourceBuilderInterface
 
     /**
      * @param string $name
+     * @param string $type
+     *
+     * @return DataSourceBuilderInterface
+     */
+    public function addSearchField($name, $type);
+
+    /**
+     * @param string $name
      *
      * @return DataSourceBuilderInterface
      */

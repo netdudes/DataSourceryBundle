@@ -2,6 +2,7 @@
 namespace Netdudes\DataSourceryBundle\Query;
 
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
+use Netdudes\DataSourceryBundle\DataType\SearchTextDataType;
 use Netdudes\DataSourceryBundle\UQL\Event\InterpreterEvents;
 use Netdudes\DataSourceryBundle\UQL\Event\PreCreateFilterConditionEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -44,6 +45,9 @@ class FilterConditionFactory
         );
         $databaseValue = $event->getDatabaseValue();
 
-        return new FilterCondition($field->getUniqueName(), $method, $value, $databaseValue);
+        $filterCondition = new FilterCondition($field->getUniqueName(), $method, $value, $databaseValue);
+        $filterCondition->setIsSearchText($field->getDataType() instanceof SearchTextDataType);
+
+        return $filterCondition;
     }
 }

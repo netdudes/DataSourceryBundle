@@ -62,6 +62,11 @@ class FilterCondition
     private $valueInDatabase;
 
     /**
+     * @var bool
+     */
+    private $isSearchText = false;
+
+    /**
      * @param $columnIdentifier  string The unique identifier of the column to filter by
      * @param $method            string A value  passed to the data source in order to decide how to filter
      * @param $value             string The value to filter with
@@ -197,5 +202,21 @@ class FilterCondition
     public function setValueInDatabase($valueInDatabase)
     {
         $this->valueInDatabase = $valueInDatabase;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSearchText()
+    {
+        return $this->isSearchText;
+    }
+
+    /**
+     * @param boolean $isSearchText
+     */
+    public function setIsSearchText($isSearchText)
+    {
+        $this->isSearchText = $isSearchText;
     }
 }
