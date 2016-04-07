@@ -16,7 +16,7 @@ class SearchTextFilterConditionTransformer
         $filter = new Filter();
         $filter->setConditionType(Filter::CONDITION_TYPE_OR);
 
-        if (empty($dataSourceFields)){
+        if (empty($dataSourceFields)) {
             return $filter;
         }
 
