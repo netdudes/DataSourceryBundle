@@ -1,12 +1,13 @@
 <?php
 namespace Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Events;
 
+use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Component\EventDispatcher\Event;
 
 class GenerateJoinsEvent extends Event
 {
     /**
-     * @var array
+     * @var Join[]
      */
     public $joins;
 
