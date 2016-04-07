@@ -9,6 +9,8 @@ use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Events\GenerateJoinsE
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Events\GenerateSelectsEvent;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\Events\PostGenerateQueryBuilderEvent;
 use Netdudes\DataSourceryBundle\Query\Query;
+use Netdudes\DataSourceryBundle\Query\SearchTextFieldHandler;
+use Netdudes\DataSourceryBundle\Query\SearchTextFilterConditionTransformer;
 
 class Builder
 {
@@ -58,6 +60,11 @@ class Builder
     protected $selectGenerator;
 
     /**
+     * @var SearchTextFieldHandler
+     */
+    protected $searchTextFieldHandler;
+
+    /**
      * @var EntityManager
      */
     private $entityManager;
@@ -83,6 +90,7 @@ class Builder
         $this->joinGenerator = new JoinGenerator($fields, $this->getFromAlias(), $this->requiredFieldsExtractor);
         $this->selectGenerator = new SelectGenerator($fields, $this->getFromAlias(), $this->joinGenerator, $this->requiredFieldsExtractor);
         $this->filterer = new Filterer();
+        $this->searchTextFieldHandler = new SearchTextFieldHandler(new SearchTextFilterConditionTransformer());
         $this->sorter = new Sorter();
         $this->paginator = new Paginator();
     }
@@ -99,8 +107,9 @@ class Builder
      */
     public function buildQueryBuilder(Query $query, $entityClass)
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $this->searchTextFieldHandler->handle($query->getFilter(), $this->dataSource->getFields());
 
+        $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder->from($entityClass, $this->getFromAlias());
 
         $select = $this->selectGenerator->generate($query);

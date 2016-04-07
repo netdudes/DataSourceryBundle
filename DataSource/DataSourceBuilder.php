@@ -9,6 +9,7 @@ use Netdudes\DataSourceryBundle\DataType\DateDataType;
 use Netdudes\DataSourceryBundle\DataType\EntityDataType;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
 use Netdudes\DataSourceryBundle\DataType\PercentDataType;
+use Netdudes\DataSourceryBundle\DataType\SearchTextDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
 use Netdudes\DataSourceryBundle\Transformers\TransformerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -82,6 +83,13 @@ class DataSourceBuilder implements DataSourceBuilderInterface
     public function addVectorField($name, $type, $filteringField, array $aliasedFields, array $options = [])
     {
         $this->fields[] = $this->newRawField($name, $type, $filteringField, $aliasedFields, $options);
+
+        return $this;
+    }
+
+    public function addSearchField($name, $type)
+    {
+        $this->fields[] = $this->newRawField($name, $type, null, null, []);
 
         return $this;
     }
@@ -168,6 +176,8 @@ class DataSourceBuilder implements DataSourceBuilderInterface
                 return new EntityDataType();
             case 'percent':
                 return new PercentDataType();
+            case 'search_text':
+                return new SearchTextDataType();
             default:
                 throw new InvalidDataTypeException();
         }
