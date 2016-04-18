@@ -28,7 +28,7 @@ services:
     netdudes_data_sourcery.uql.interpreter.factory:
         class: Netdudes\DataSourceryBundle\UQL\InterpreterFactory
         arguments:
-            - "@netdudes_data_sourcery.uql_extension_container"
+            - "@netdudes_data_sourcery.uql_function_caller"
             - "@netdudes_data_sourcery.query.filter_condition_factory"
             - "%netdudes_data_sourcery.uql.case_sensitive%"
 
@@ -45,6 +45,11 @@ services:
 
     netdudes_data_sourcery.uql_extension_container:
         class: Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer
+
+    netdudes_data_sourcery.uql_function_caller:
+        class: Netdudes\DataSourceryBundle\Extension\UqlFunctionCaller
+        arguments:
+            - "@netdudes_data_sourcery.uql_extension_container"
 
     netdudes_data_sourcery.util.date_time_provider:
         class: Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider

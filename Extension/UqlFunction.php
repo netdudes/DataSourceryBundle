@@ -10,6 +10,8 @@ class UqlFunction implements \JsonSerializable
 {
     /**
      * Instance to which this function/method belongs
+     *
+     * @var UqlExtensionInterface
      */
     private $instance;
 
@@ -27,7 +29,12 @@ class UqlFunction implements \JsonSerializable
      */
     private $name;
 
-    public function __construct($name, $instance, $method)
+    /**
+     * @param string                $name
+     * @param UqlExtensionInterface $instance
+     * @param string                $method
+     */
+    public function __construct($name, UqlExtensionInterface $instance, $method)
     {
         $this->instance = $instance;
         $this->name = $name;
@@ -35,7 +42,7 @@ class UqlFunction implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return UqlExtensionInterface
      */
     public function getInstance()
     {
@@ -59,15 +66,16 @@ class UqlFunction implements \JsonSerializable
     }
 
     /**
-     * Performs the call to the function defined by this FunctionExtension
-     *
      * @param $arguments
+     * @param Context $context
      *
      * @return mixed
      */
-    public function call($arguments)
+    public function call($arguments, Context $context)
     {
-        return call_user_func_array([$this->instance, $this->method], $arguments);
+        array_unshift($arguments, $context);
+
+        return call_user_func_array([$this->getInstance(), $this->getMethod()], $arguments);
     }
 
     /**
@@ -116,7 +124,7 @@ class UqlFunction implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $json =  [
+        $json = [
             'name' => $this->getName(),
             'arguments' => [],
         ];

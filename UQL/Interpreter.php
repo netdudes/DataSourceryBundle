@@ -4,7 +4,8 @@ namespace Netdudes\DataSourceryBundle\UQL;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
-use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
+use Netdudes\DataSourceryBundle\Extension\Context;
+use Netdudes\DataSourceryBundle\Extension\UqlFunctionCaller;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
@@ -22,9 +23,9 @@ use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 class Interpreter
 {
     /**
-     * @var UqlExtensionContainer
+     * @var UqlFunctionCaller
      */
-    private $extensionContainer;
+    private $uqlFunctionCaller;
 
     /**
      * @var DataSourceInterface
@@ -50,18 +51,18 @@ class Interpreter
      * Constructor needs the columns descriptor to figure out appropriate filtering methods
      * and translate identifiers.
      *
-     * @param UqlExtensionContainer  $extensionContainer
+     * @param UqlFunctionCaller      $uqlFunctionCaller
      * @param DataSourceInterface    $dataSource
      * @param FilterConditionFactory $filterConditionFactory
      * @param bool                   $caseSensitive
      */
     public function __construct(
-        UqlExtensionContainer $extensionContainer,
+        UqlFunctionCaller $uqlFunctionCaller,
         DataSourceInterface $dataSource,
         FilterConditionFactory $filterConditionFactory,
         $caseSensitive = true
     ) {
-        $this->extensionContainer = $extensionContainer;
+        $this->uqlFunctionCaller = $uqlFunctionCaller;
         $this->dataSource = $dataSource;
         $this->filterConditionFactory = $filterConditionFactory;
         $this->caseSensitive = $caseSensitive;
@@ -158,6 +159,7 @@ class Interpreter
             // Single filter. Wrap into dummy filter collection for consistency.
             $filter = new Filter();
             $filter[] = $filterCondition;
+
             return $filter;
         }
 
@@ -281,7 +283,9 @@ class Interpreter
     private function callFunction(ASTFunctionCall $functionCall)
     {
         try {
-            return $this->extensionContainer->callFunction($functionCall->getFunctionName(), $functionCall->getArguments());
+            $context = new Context($this->dataSource->getEntityClass());
+
+            return $this->uqlFunctionCaller->callFunction($functionCall->getFunctionName(), $functionCall->getArguments(), $context);
         } catch (\Exception $e) {
             throw new UQLInterpreterException("The execution of function '" . $functionCall->getFunctionName() . "' failed. Please check the arguments are valid. (" . $e->getMessage() . ")");
         }

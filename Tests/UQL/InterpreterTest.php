@@ -69,11 +69,11 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
             ->method('getFields')
             ->will($this->returnValue($dataSourceElements));
 
-        $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
+        $uqlFunctionCaller = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlFunctionCaller')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $interpreterFactory = new InterpreterFactory($extensionContainer, new FilterConditionFactory());
+        $interpreterFactory = new InterpreterFactory($uqlFunctionCaller, new FilterConditionFactory());
         $interpreter = $interpreterFactory->create($dataSource);
 
         $actualFilter = $interpreter->buildFilter($astSubtree);
@@ -95,10 +95,10 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
             ->method('getFields')
             ->will($this->returnValue([$dataSourceElement]));
 
-        $extensionContainer = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer')
+        $uqlFunctionCaller = $this->getMockBuilder('Netdudes\DataSourceryBundle\Extension\UqlFunctionCaller')
             ->disableOriginalConstructor()
             ->getMock();
-        $interpreterFactory = new InterpreterFactory($extensionContainer, new FilterConditionFactory());
+        $interpreterFactory = new InterpreterFactory($uqlFunctionCaller, new FilterConditionFactory());
         $interpreter = $interpreterFactory->create($dataSource);
 
         // LIKE is valid for String type, should return LIKE
