@@ -33,13 +33,9 @@ class UqlExtensionContainer
      *
      * @return mixed
      * @throws Exception\FunctionNotFoundException
-     *
-     * @deprecated Deprecated. Use the uql function caller instead.
      */
     public function callFunction($name, $arguments)
     {
-        @trigger_error('Deprecated. Use the uql function caller directly instead.', E_USER_DEPRECATED);
-    
         if (!(isset($this->getFunctions()[$name]))) {
             throw new FunctionNotFoundException("Could not find UQL function $name");
         }

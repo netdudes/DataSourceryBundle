@@ -24,12 +24,4 @@ class Context
     {
         return $this->entityClass;
     }
-
-    /**
-     * @param string $entityClass
-     */
-    public function setEntityClass($entityClass)
-    {
-        $this->entityClass = $entityClass;
-    }
 }

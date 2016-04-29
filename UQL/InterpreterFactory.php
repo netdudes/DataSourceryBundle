@@ -4,15 +4,14 @@ namespace Netdudes\DataSourceryBundle\UQL;
 
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
-use Netdudes\DataSourceryBundle\Extension\UqlFunctionCaller;
 use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
 
 class InterpreterFactory
 {
     /**
-     * @var UqlFunctionCaller
+     * @var UqlExtensionContainer
      */
-    private $uqlFunctionCaller;
+    private $extensionContainer;
 
     /**
      * @var FilterConditionFactory
@@ -25,16 +24,16 @@ class InterpreterFactory
     private $caseSensitive;
 
     /**
-     * @param UqlFunctionCaller      $uqlFunctionCaller
+     * @param UqlExtensionContainer  $extensionContainer
      * @param FilterConditionFactory $filterConditionFactory
      * @param bool                   $caseSensitive
      */
     public function __construct(
-        UqlFunctionCaller $uqlFunctionCaller,
+        UqlExtensionContainer $extensionContainer,
         FilterConditionFactory $filterConditionFactory,
         $caseSensitive = true
     ) {
-        $this->uqlFunctionCaller = $uqlFunctionCaller;
+        $this->extensionContainer = $extensionContainer;
         $this->caseSensitive = $caseSensitive;
         $this->filterConditionFactory = $filterConditionFactory;
     }
@@ -46,6 +45,6 @@ class InterpreterFactory
      */
     public function create(DataSourceInterface $dataSource)
     {
-        return new Interpreter($this->uqlFunctionCaller, $dataSource, $this->filterConditionFactory, $this->caseSensitive);
+        return new Interpreter($this->extensionContainer, $dataSource, $this->filterConditionFactory, $this->caseSensitive);
     }
 }

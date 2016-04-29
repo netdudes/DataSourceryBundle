@@ -66,15 +66,14 @@ class UqlFunction implements \JsonSerializable
     }
 
     /**
-     * @param $arguments
-     * @param Context $context
+     * Performs the call to the function defined by this FunctionExtension
+     *
+     * @param array $arguments
      *
      * @return mixed
      */
-    public function call($arguments, Context $context)
+    public function call($arguments)
     {
-        array_unshift($arguments, $context);
-
         return call_user_func_array([$this->getInstance(), $this->getMethod()], $arguments);
     }
 

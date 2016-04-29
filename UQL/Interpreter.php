@@ -5,7 +5,7 @@ use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\Extension\Context;
-use Netdudes\DataSourceryBundle\Extension\UqlFunctionCaller;
+use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
@@ -23,9 +23,9 @@ use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 class Interpreter
 {
     /**
-     * @var UqlFunctionCaller
+     * @var UqlExtensionContainer
      */
-    private $uqlFunctionCaller;
+    private $extensionContainer;
 
     /**
      * @var DataSourceInterface
@@ -51,18 +51,18 @@ class Interpreter
      * Constructor needs the columns descriptor to figure out appropriate filtering methods
      * and translate identifiers.
      *
-     * @param UqlFunctionCaller      $uqlFunctionCaller
+     * @param UqlExtensionContainer  $extensionContainer
      * @param DataSourceInterface    $dataSource
      * @param FilterConditionFactory $filterConditionFactory
      * @param bool                   $caseSensitive
      */
     public function __construct(
-        UqlFunctionCaller $uqlFunctionCaller,
+        UqlExtensionContainer $extensionContainer,
         DataSourceInterface $dataSource,
         FilterConditionFactory $filterConditionFactory,
         $caseSensitive = true
     ) {
-        $this->uqlFunctionCaller = $uqlFunctionCaller;
+        $this->extensionContainer = $extensionContainer;
         $this->dataSource = $dataSource;
         $this->filterConditionFactory = $filterConditionFactory;
         $this->caseSensitive = $caseSensitive;
@@ -282,12 +282,15 @@ class Interpreter
      */
     private function callFunction(ASTFunctionCall $functionCall)
     {
-        try {
-            $context = new Context($this->dataSource->getEntityClass());
+        $functionName = $functionCall->getFunctionName();
+        $arguments = $functionCall->getArguments();
 
-            return $this->uqlFunctionCaller->callFunction($functionCall->getFunctionName(), $functionCall->getArguments(), $context);
+        $arguments[] = new Context($this->dataSource->getEntityClass());
+
+        try {
+            return $this->extensionContainer->callFunction($functionName, $arguments);
         } catch (\Exception $e) {
-            throw new UQLInterpreterException("The execution of function '" . $functionCall->getFunctionName() . "' failed. Please check the arguments are valid. (" . $e->getMessage() . ")");
+            throw new UQLInterpreterException("The execution of function '$functionName' failed. Please check the arguments are valid. (" . $e->getMessage() . ")");
         }
     }
 
