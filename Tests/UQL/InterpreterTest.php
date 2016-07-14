@@ -5,6 +5,7 @@ use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
 use Netdudes\DataSourceryBundle\DataType\StringDataType;
+use Netdudes\DataSourceryBundle\Extension\ContextFactory;
 use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
@@ -15,6 +16,11 @@ use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
 
 class InterpreterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ContextFactory
+     */
+    private $contextFactory;
+
     /**
      * Test the filter construction against a typical complex multilevel situation.
      */
@@ -71,7 +77,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
 
         $extensionContainerProphecy = $this->prophesize(UqlExtensionContainer::class);
 
-        $interpreterFactory = new InterpreterFactory($extensionContainerProphecy->reveal(), new FilterConditionFactory());
+        $interpreterFactory = new InterpreterFactory($extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactory);
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
         $actualFilter = $interpreter->buildFilter($astSubtree);
@@ -93,7 +99,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
 
         $extensionContainerProphecy = $this->prophesize(UqlExtensionContainer::class);
 
-        $interpreterFactory = new InterpreterFactory($extensionContainerProphecy->reveal(), new FilterConditionFactory());
+        $interpreterFactory = new InterpreterFactory($extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactory);
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
         // LIKE is valid for String type, should return LIKE
@@ -101,5 +107,10 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
 
         // EQ is valid for String, and should choose STRING_EQ as it's the default for the type
         $this->assertEquals(FilterCondition::METHOD_STRING_EQ, $interpreter->translateOperator('T_OP_EQ', $dataSourceElement), 'Failed to translate T_OP_EQ into STRING_EQ for type String');
+    }
+
+    protected function setUp()
+    {
+        $this->contextFactory = $this->prophesize(ContextFactory::class)->reveal();
     }
 }

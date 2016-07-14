@@ -6,7 +6,7 @@ namespace Netdudes\DataSourceryBundle\Extension;
  * Wraps a definition of a callable defined in an extension,
  * available to be used in UQL, etc.
  */
-class UqlFunction implements \JsonSerializable
+class UqlFunction implements \JsonSerializable, UqlFunctionInterface
 {
     /**
      * Instance to which this function/method belongs

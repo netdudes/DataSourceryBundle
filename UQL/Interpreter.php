@@ -4,7 +4,9 @@ namespace Netdudes\DataSourceryBundle\UQL;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\FieldInterface;
 use Netdudes\DataSourceryBundle\DataSource\DataSourceInterface;
-use Netdudes\DataSourceryBundle\Extension\Context;
+use Netdudes\DataSourceryBundle\Extension\ContextAwareUqlFunction;
+use Netdudes\DataSourceryBundle\Extension\ContextFactory;
+use Netdudes\DataSourceryBundle\Extension\Exception\FunctionNotFoundException;
 use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
@@ -48,23 +50,31 @@ class Interpreter
     private $filterConditionFactory;
 
     /**
+     * @var ContextFactory
+     */
+    private $contextFactory;
+
+    /**
      * Constructor needs the columns descriptor to figure out appropriate filtering methods
      * and translate identifiers.
      *
      * @param UqlExtensionContainer  $extensionContainer
      * @param DataSourceInterface    $dataSource
      * @param FilterConditionFactory $filterConditionFactory
+     * @param ContextFactory         $contextFactory
      * @param bool                   $caseSensitive
      */
     public function __construct(
         UqlExtensionContainer $extensionContainer,
         DataSourceInterface $dataSource,
         FilterConditionFactory $filterConditionFactory,
+        ContextFactory $contextFactory,
         $caseSensitive = true
     ) {
         $this->extensionContainer = $extensionContainer;
         $this->dataSource = $dataSource;
         $this->filterConditionFactory = $filterConditionFactory;
+        $this->contextFactory = $contextFactory;
         $this->caseSensitive = $caseSensitive;
 
         // Cache an array of data sources (name => object pairs) for reference during the interpretation
@@ -85,8 +95,8 @@ class Interpreter
      *
      * @param $method
      *
-     * @throws Exception\UQLInterpreterException
-     * @return
+     * @throws UQLInterpreterException
+     * @return mixed
      */
     public static function methodToUQLOperator($method)
     {
@@ -145,7 +155,7 @@ class Interpreter
      *
      * TODO: make private
      *
-     * @return Filter|FilterCondition
+     * @return FilterCondition
      * @throws \Exception
      */
     public function buildFilter($astSubtree)
@@ -172,7 +182,7 @@ class Interpreter
      * @param string         $token
      * @param FieldInterface $dataSourceElement
      *
-     * @throws Exception\UQLInterpreterException
+     * @throws UQLInterpreterException
      * @return mixed
      */
     public function translateOperator($token, FieldInterface $dataSourceElement)
@@ -262,7 +272,7 @@ class Interpreter
     /**
      * Trim and clean up the value to be set in the filter.
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -279,17 +289,22 @@ class Interpreter
      * @param ASTFunctionCall $functionCall
      *
      * @return mixed
-     * @throws Exception\UQLInterpreterException
+     * @throws FunctionNotFoundException
+     * @throws UQLInterpreterException
      */
     private function callFunction(ASTFunctionCall $functionCall)
     {
         $functionName = $functionCall->getFunctionName();
+        $function = $this->extensionContainer->getFunction($functionName);
         $arguments = $functionCall->getArguments();
 
-        $arguments[] = new Context($this->dataSource->getEntityClass());
+        if ($function instanceof ContextAwareUqlFunction) {
+            $context = $this->contextFactory->create($this->dataSource->getEntityClass());
+            array_unshift($arguments, $context);
+        }
 
         try {
-            return $this->extensionContainer->callFunction($functionName, $arguments);
+            return $function->call($arguments);
         } catch (\Exception $e) {
             throw new UQLInterpreterException("The execution of function '$functionName' failed. Please check the arguments are valid. (" . $e->getMessage() . ")");
         }
