@@ -203,6 +203,7 @@ class Interpreter
             "T_OP_NEQ" => [
                 FilterCondition::METHOD_NUMERIC_NEQ,
                 FilterCondition::METHOD_STRING_NEQ,
+                FilterCondition::METHOD_DATETIME_NEQ,
             ],
             "T_OP_LIKE" => [
                 FilterCondition::METHOD_STRING_LIKE,
