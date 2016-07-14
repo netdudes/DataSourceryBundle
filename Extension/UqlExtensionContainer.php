@@ -61,7 +61,7 @@ class UqlExtensionContainer
 
         foreach ($extension->getFunctions() as $function) {
             if (!($function instanceof UqlFunctionInterface)) {
-                throw new InvalidExtensionTypeException("Function extensions must be of type UqlFunction");
+                throw new InvalidExtensionTypeException("Function extensions must implement the UqlFunctionInterface");
             }
             $this->functions[$function->getName()] = $function;
         }

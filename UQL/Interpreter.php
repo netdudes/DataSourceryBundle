@@ -93,10 +93,10 @@ class Interpreter
      * Helper method: matches filtering operators to valid UQL operators
      * in order to do Filter to UQL transformations
      *
-     * @param $method
+     * @param string $method
      *
      * @throws UQLInterpreterException
-     * @return mixed
+     * @return string
      */
     public static function methodToUQLOperator($method)
     {
