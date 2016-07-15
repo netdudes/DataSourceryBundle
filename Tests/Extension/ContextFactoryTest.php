@@ -6,7 +6,7 @@ use Netdudes\DataSourceryBundle\Extension\ContextFactory;
 
 class ContextFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testItCreatesAContext()
+    public function testCreateAContext()
     {
         $entityClass = 'entity class';
         $contextFactory = new ContextFactory();

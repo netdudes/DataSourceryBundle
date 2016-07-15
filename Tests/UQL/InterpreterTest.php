@@ -19,7 +19,12 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ContextFactory
      */
-    private $contextFactory;
+    private $contextFactoryProphecy;
+
+    /**
+     * @var UqlExtensionContainer
+     */
+    private $extensionContainerProphecy;
 
     /**
      * Test the filter construction against a typical complex multilevel situation.
@@ -75,9 +80,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $dataSourceProphecy = $this->prophesize(DataSourceInterface::class);
         $dataSourceProphecy->getFields()->willReturn($dataSourceElements);
 
-        $extensionContainerProphecy = $this->prophesize(UqlExtensionContainer::class);
-
-        $interpreterFactory = new InterpreterFactory($extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactory);
+        $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
         $actualFilter = $interpreter->buildFilter($astSubtree);
@@ -97,9 +100,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $dataSourceProphecy = $this->prophesize(DataSourceInterface::class);
         $dataSourceProphecy->getFields()->willReturn([$dataSourceElement]);
 
-        $extensionContainerProphecy = $this->prophesize(UqlExtensionContainer::class);
-
-        $interpreterFactory = new InterpreterFactory($extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactory);
+        $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
         // LIKE is valid for String type, should return LIKE
@@ -111,6 +112,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->contextFactory = $this->prophesize(ContextFactory::class)->reveal();
+        $this->extensionContainerProphecy = $this->prophesize(UqlExtensionContainer::class);
+        $this->contextFactoryProphecy = $this->prophesize(ContextFactory::class);
     }
 }

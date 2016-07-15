@@ -8,6 +8,7 @@ use Netdudes\DataSourceryBundle\Extension\ContextAwareUqlFunction;
 use Netdudes\DataSourceryBundle\Extension\ContextFactory;
 use Netdudes\DataSourceryBundle\Extension\Exception\FunctionNotFoundException;
 use Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer;
+use Netdudes\DataSourceryBundle\Extension\UqlFunctionInterface;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
@@ -90,6 +91,25 @@ class Interpreter
     }
 
     /**
+     * Generate the filter objects corresponding to a UQL string.
+     *
+     * @param string $uql
+     *
+     * @return Filter
+     */
+    public function interpret($uql)
+    {
+        if (empty(trim($uql))) {
+            return new Filter();
+        }
+
+        $parser = new Parser();
+        $AST = $parser->parse($uql);
+
+        return $this->buildFilter($AST);
+    }
+
+    /**
      * Helper method: matches filtering operators to valid UQL operators
      * in order to do Filter to UQL transformations
      *
@@ -129,33 +149,15 @@ class Interpreter
     }
 
     /**
-     * Generate the filter objects corresponding to a UQL string.
-     *
-     * @param string $uql
-     *
-     * @return Filter
-     */
-    public function interpret($uql)
-    {
-        if (empty(trim($uql))) {
-            return new Filter();
-        }
-
-        $parser = new Parser();
-        $AST = $parser->parse($uql);
-
-        return $this->buildFilter($AST);
-    }
-
-    /**
      * Transforms a subtree of the AST into a concrete filter definition.
      * This function recursively builds all sub-trees.
      *
      * @param ASTGroup|ASTAssertion|mixed $astSubtree
      *
-     * TODO: make private
+     * TODO: This looks like it should not be public (it is only used in tests).
+     * We could move it and it's dependencies to its own class so that it can be tested
      *
-     * @return FilterCondition
+     * @return Filter
      * @throws \Exception
      */
     public function buildFilter($astSubtree)
@@ -296,12 +298,7 @@ class Interpreter
     {
         $functionName = $functionCall->getFunctionName();
         $function = $this->extensionContainer->getFunction($functionName);
-        $arguments = $functionCall->getArguments();
-
-        if ($function instanceof ContextAwareUqlFunction) {
-            $context = $this->contextFactory->create($this->dataSource->getEntityClass());
-            array_unshift($arguments, $context);
-        }
+        $arguments = $this->getFunctionArguments($functionCall, $function);
 
         try {
             return $function->call($arguments);
@@ -407,5 +404,23 @@ class Interpreter
         }
 
         return $filter;
+    }
+
+    /**
+     * @param ASTFunctionCall      $functionCall
+     * @param UqlFunctionInterface $function
+     *
+     * @return array
+     */
+    private function getFunctionArguments(ASTFunctionCall $functionCall, $function)
+    {
+        $arguments = $functionCall->getArguments();
+
+        if ($function instanceof ContextAwareUqlFunction) {
+            $context = $this->contextFactory->create($this->dataSource->getEntityClass());
+            array_unshift($arguments, $context);
+        }
+
+        return $arguments;
     }
 }
