@@ -37,7 +37,7 @@ class FilterConditionFactory
      */
     public function create(Field $field, $method, $value)
     {
-        $event = new PreCreateFilterConditionEvent($field->getDataType(), $value);
+        $event = new PreCreateFilterConditionEvent($field->getDataType(), $value, $method);
         $this->eventDispatcher->dispatch(
             InterpreterEvents::PRE_CREATE_FILTER_CONDITION,
             $event

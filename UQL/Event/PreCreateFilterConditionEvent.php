@@ -17,13 +17,20 @@ class PreCreateFilterConditionEvent extends Event
     private $databaseValue;
 
     /**
-     * @param DataTypeInterface $dataType
-     * @param mixed $value
+     * @var string
      */
-    public function __construct(DataTypeInterface $dataType, $value)
+    private $method;
+
+    /**
+     * @param DataTypeInterface $dataType
+     * @param mixed             $value
+     * @param string            $method
+     */
+    public function __construct(DataTypeInterface $dataType, $value, $method)
     {
         $this->dataType = $dataType;
         $this->databaseValue = $value;
+        $this->method = $method;
     }
 
     /**
@@ -48,5 +55,13 @@ class PreCreateFilterConditionEvent extends Event
     public function setDatabaseValue($databaseValue)
     {
         $this->databaseValue = $databaseValue;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->method;
     }
 }
