@@ -6,10 +6,12 @@ namespace Netdudes\DataSourceryBundle\Extension;
  * Wraps a definition of a callable defined in an extension,
  * available to be used in UQL, etc.
  */
-class UqlFunction implements \JsonSerializable
+class UqlFunction implements \JsonSerializable, UqlFunctionInterface
 {
     /**
      * Instance to which this function/method belongs
+     *
+     * @var UqlExtensionInterface
      */
     private $instance;
 
@@ -27,7 +29,12 @@ class UqlFunction implements \JsonSerializable
      */
     private $name;
 
-    public function __construct($name, $instance, $method)
+    /**
+     * @param string                $name
+     * @param UqlExtensionInterface $instance
+     * @param string                $method
+     */
+    public function __construct($name, UqlExtensionInterface $instance, $method)
     {
         $this->instance = $instance;
         $this->name = $name;
@@ -35,7 +42,7 @@ class UqlFunction implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return UqlExtensionInterface
      */
     public function getInstance()
     {
@@ -61,13 +68,13 @@ class UqlFunction implements \JsonSerializable
     /**
      * Performs the call to the function defined by this FunctionExtension
      *
-     * @param $arguments
+     * @param array $arguments
      *
      * @return mixed
      */
     public function call($arguments)
     {
-        return call_user_func_array([$this->instance, $this->method], $arguments);
+        return call_user_func_array([$this->getInstance(), $this->getMethod()], $arguments);
     }
 
     /**
@@ -116,7 +123,7 @@ class UqlFunction implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        $json =  [
+        $json = [
             'name' => $this->getName(),
             'arguments' => [],
         ];

@@ -13,7 +13,7 @@ class UqlExtensionContainer
     private $extensions = [];
 
     /**
-     * @var UqlFunction[]
+     * @var UqlFunctionInterface[]
      */
     private $functions = [];
 
@@ -26,25 +26,22 @@ class UqlExtensionContainer
     }
 
     /**
-     * Performs a call to a function defined in any of the extensions managed by the container.
+     * @param string $name
      *
-     * @param $name
-     * @param $arguments
-     *
-     * @return mixed
-     * @throws Exception\FunctionNotFoundException
+     * @return UqlFunctionInterface
+     * @throws FunctionNotFoundException
      */
-    public function callFunction($name, $arguments)
+    public function getFunction($name)
     {
         if (!(isset($this->getFunctions()[$name]))) {
             throw new FunctionNotFoundException("Could not find UQL function $name");
         }
 
-        return $this->getFunctions()[$name]->call($arguments);
+        return $this->getFunctions()[$name];
     }
 
     /**
-     * @return UqlFunction[]
+     * @return UqlFunctionInterface[]
      */
     public function getFunctions()
     {
@@ -56,15 +53,15 @@ class UqlExtensionContainer
      *
      * @param UqlExtensionInterface $extension
      *
-     * @throws Exception\InvalidExtensionTypeException
+     * @throws InvalidExtensionTypeException
      */
     public function addExtension(UqlExtensionInterface $extension)
     {
         $this->extensions[] = $extension;
 
         foreach ($extension->getFunctions() as $function) {
-            if (!($function instanceof UqlFunction)) {
-                throw new InvalidExtensionTypeException("Function extensions must be of type UqlFunction");
+            if (!($function instanceof UqlFunctionInterface)) {
+                throw new InvalidExtensionTypeException("Function extensions must implement the UqlFunctionInterface");
             }
             $this->functions[$function->getName()] = $function;
         }

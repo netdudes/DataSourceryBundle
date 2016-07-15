@@ -30,6 +30,7 @@ services:
         arguments:
             - "@netdudes_data_sourcery.uql_extension_container"
             - "@netdudes_data_sourcery.query.filter_condition_factory"
+            - "@netdudes_data_sourcery.extension.context_factory"
             - "%netdudes_data_sourcery.uql.case_sensitive%"
 
     netdudes_data_sourcery.query.filter_condition_factory:
@@ -42,6 +43,9 @@ services:
             - "@netdudes_data_sourcery.util.date_time_provider"
         tags:
             - { name: netdudes_data_sourcery.extension }
+
+    netdudes_data_sourcery.extension.context_factory:
+        class: Netdudes\DataSourceryBundle\Extension\ContextFactory
 
     netdudes_data_sourcery.uql_extension_container:
         class: Netdudes\DataSourceryBundle\Extension\UqlExtensionContainer
