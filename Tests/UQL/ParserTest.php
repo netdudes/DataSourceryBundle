@@ -25,6 +25,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             'T_OP_GT',
             'T_OP_EQ',
             'T_OP_IN',
+            'T_OP_NIN',
         ];
 
         // Build a token stream from the list of tokens to test

@@ -18,6 +18,7 @@ class StringDataTypeTest extends \PHPUnit_Framework_TestCase
             FilterCondition::METHOD_STRING_NEQ,
             FilterCondition::METHOD_STRING_LIKE,
             FilterCondition::METHOD_IN,
+            FilterCondition::METHOD_NIN,
         ];
 
         $this->assertSame($expectedAvailableMethods, $this->dataType->getAvailableFilterMethods());

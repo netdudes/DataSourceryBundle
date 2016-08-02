@@ -130,7 +130,8 @@ class Interpreter
             FilterCondition::METHOD_NUMERIC_LTE => "<=",
             FilterCondition::METHOD_NUMERIC_LT => "<",
             FilterCondition::METHOD_NUMERIC_NEQ => "!=",
-            FilterCondition::METHOD_IN => "IN",
+            FilterCondition::METHOD_IN => "in",
+            FilterCondition::METHOD_NIN => "not in",
             FilterCondition::METHOD_BOOLEAN => "is",
             FilterCondition::METHOD_IS_NULL => "is null",
             FilterCondition::METHOD_DATETIME_GT => "after",
@@ -222,6 +223,9 @@ class Interpreter
             ],
             "T_OP_IN" => [
                 FilterCondition::METHOD_IN,
+            ],
+            "T_OP_NIN" => [
+                FilterCondition::METHOD_NIN,
             ],
         ];
 
@@ -354,9 +358,9 @@ class Interpreter
             return $this->callFunction($astSubtree->getValue());
         }
 
-        if ($astSubtree->getOperator() == 'T_OP_IN') {
+        if (in_array($astSubtree->getOperator(), ['T_OP_IN', 'T_OP_NIN'])) {
             if (!($astSubtree->getValue() instanceof ASTArray)) {
-                throw new UQLInterpreterException('Only arrays are valid arguments for IN statements');
+                throw new UQLInterpreterException('Only arrays are valid arguments for IN / NOT IN statements');
             }
 
             return $this->parseArray($astSubtree->getValue()->getElements());

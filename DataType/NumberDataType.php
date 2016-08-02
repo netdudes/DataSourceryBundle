@@ -21,6 +21,7 @@ class NumberDataType extends AbstractDataType
             FilterCondition::METHOD_NUMERIC_LT,
             FilterCondition::METHOD_NUMERIC_NEQ,
             FilterCondition::METHOD_IN,
+            FilterCondition::METHOD_NIN,
         ];
     }
 

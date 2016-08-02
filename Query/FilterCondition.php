@@ -26,6 +26,7 @@ class FilterCondition
     const METHOD_NUMERIC_LT = "NUMERIC_LT";
     const METHOD_NUMERIC_NEQ = "NUMERIC_NEQ";
     const METHOD_IN = "IN";
+    const METHOD_NIN = "NIN";
     const METHOD_BOOLEAN = "BOOLEAN";
     const METHOD_IS_NULL = "IS_NULL";
     const METHOD_DATETIME_GT = "DATETIME_GT";

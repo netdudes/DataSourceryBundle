@@ -20,6 +20,7 @@ class Tokens
             'T_OP_GTE',
             'T_OP_LIKE',
             'T_OP_IN',
+            'T_OP_NIN',
         ],
         'LOGIC' => [
             'T_OP_AND',
@@ -89,10 +90,13 @@ class Tokens
         "STRING_EQ" => ["=", "equals", "is"],
         "NUMERIC_EQ" => ["=", "equals", "is"],
         "DATETIME_EQ" => ["=", "on", "is", "at"],
-        "IN" => ["in"]
+        "IN" => ["in"],
+        "NIN" => ["not in"],
     ];
 
     private static $operatorTokenAssociations = [
+        "T_OP_IN" => ["IN"],
+        "T_OP_NIN" => ["NIN"],
         "T_OP_NEQ" => ["STRING_NEQ", "NUMERIC_NEQ", "DATETIME_NEQ"],
         "T_OP_EQ" => ["STRING_EQ", "NUMERIC_EQ", "DATETIME_EQ"],
         "T_OP_GTE" => ["NUMERIC_GTE", "DATETIME_GTE"],
@@ -100,7 +104,6 @@ class Tokens
         "T_OP_LTE" => ["NUMERIC_LTE", "DATETIME_LTE"],
         "T_OP_LT" => ["NUMERIC_LT", "DATETIME_LT"],
         "T_OP_LIKE" => ["STRING_LIKE"],
-        "T_OP_IN" => ["IN"]
     ];
 
     /**

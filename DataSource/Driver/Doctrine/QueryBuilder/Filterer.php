@@ -112,7 +112,7 @@ class Filterer
 
         // Ignore value if needed
         if (
-            ($filterMethod == FilterCondition::METHOD_IN && count($valueInDatabase) <= 0) ||
+            (in_array($filterMethod, [FilterCondition::METHOD_IN, FilterCondition::METHOD_NIN]) && count($valueInDatabase) <= 0) ||
             ($filterMethod == FilterCondition::METHOD_IS_NULL)
         ) {
             $ignoreParameter = true;
@@ -170,16 +170,22 @@ class Filterer
             case FilterCondition::METHOD_DATETIME_NEQ:
                 return $queryBuilder->expr()->neq($identifier, $token);
             case FilterCondition::METHOD_IN:
+            case FilterCondition::METHOD_NIN:
                 if (!is_array($value)) {
-                    throw new \Exception('Only arrays can be arguments of a METHOD_IN filter');
+                    throw new \Exception('Only arrays can be arguments of a METHOD_IN or METHOD_NIN filter');
                 }
 
-                if (count($filterCondition->getValue()) > 0) {
-                    return $queryBuilder->expr()->in($identifier, $token);
+                if (count($filterCondition->getValue()) <= 0) {
+                    // The array is empty, therefore this will always be "false". We use an always-false expression
+                    // to emulate this without actually using an invalid empty array in the IN statement.
+                    return '1=2';
                 }
-                // The array is empty, therefore this will always be "false". We use an always-false expression
-                // to emulate this without actually using an invalid empty array in the IN statement.
-                return '1=2';
+
+                if ($filterMethod === FilterCondition::METHOD_IN) {
+                    return $queryBuilder->expr()->in($identifier, $token);
+                } else {
+                    return $queryBuilder->expr()->notIn($identifier, $token);
+                }
             case FilterCondition::METHOD_IS_NULL:
                 if ($filterCondition->getValue()) {
                     return $queryBuilder->expr()->isNull($identifier);
