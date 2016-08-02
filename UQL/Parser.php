@@ -200,8 +200,8 @@ class Parser
 
         $array = $this->matchArray();
         if ($array) {
-            if ($operator['token'] !== 'T_OP_IN') {
-                throw new UQLSyntaxError("Arrays are only valid after operator IN");
+            if (!in_array($operator['token'], ['T_OP_IN', 'T_OP_NIN'])) {
+                throw new UQLSyntaxError("Arrays are only valid after IN or NOT IN operators");
             }
 
             return new ASTAssertion($identifier['match'], $operator['token'], $array);
@@ -239,6 +239,7 @@ class Parser
             case 'T_OP_EQ':
             case 'T_OP_LIKE':
             case 'T_OP_IN':
+            case 'T_OP_NIN':
                 return $operator;
                 break;
             default:
