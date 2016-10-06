@@ -6,6 +6,25 @@ use Netdudes\DataSourceryBundle\Query\FilterCondition;
 class PercentDataType extends AbstractDataType
 {
     /**
+     * Return an array of available sorting methods.
+     *
+     * @return array
+     */
+    public function getAvailableFilterMethods()
+    {
+        return [
+            FilterCondition::METHOD_NUMERIC_GT,
+            FilterCondition::METHOD_NUMERIC_GTE,
+            FilterCondition::METHOD_NUMERIC_EQ,
+            FilterCondition::METHOD_NUMERIC_LTE,
+            FilterCondition::METHOD_NUMERIC_LT,
+            FilterCondition::METHOD_NUMERIC_NEQ,
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
+        ];
+    }
+
+    /**
      * Return the identifier of the default sort method.
      *
      * @return int
@@ -23,22 +42,5 @@ class PercentDataType extends AbstractDataType
     public function getName()
     {
         return 'percentage';
-    }
-
-    /**
-     * Return an array of available sorting methods.
-     *
-     * @return array
-     */
-    public function getAvailableFilterMethods()
-    {
-        return [
-            FilterCondition::METHOD_NUMERIC_GT,
-            FilterCondition::METHOD_NUMERIC_GTE,
-            FilterCondition::METHOD_NUMERIC_EQ,
-            FilterCondition::METHOD_NUMERIC_LTE,
-            FilterCondition::METHOD_NUMERIC_LT,
-            FilterCondition::METHOD_NUMERIC_NEQ,
-        ];
     }
 }

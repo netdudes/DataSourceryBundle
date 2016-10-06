@@ -22,6 +22,8 @@ class NumberDataTypeTest extends \PHPUnit_Framework_TestCase
             FilterCondition::METHOD_NUMERIC_NEQ,
             FilterCondition::METHOD_IN,
             FilterCondition::METHOD_NIN,
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
         ];
 
         $this->assertSame($expectedAvailableMethods, $this->dataType->getAvailableFilterMethods());

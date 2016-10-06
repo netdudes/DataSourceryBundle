@@ -20,6 +20,8 @@ class DateDataTypeTest extends \PHPUnit_Framework_TestCase
             FilterCondition::METHOD_DATETIME_LTE,
             FilterCondition::METHOD_DATETIME_LT,
             FilterCondition::METHOD_DATETIME_NEQ,
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
         ];
 
         $this->assertSame($expectedAvailableMethods, $this->dataType->getAvailableFilterMethods());

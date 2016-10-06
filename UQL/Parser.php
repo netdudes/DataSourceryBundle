@@ -207,6 +207,10 @@ class Parser
             return new ASTAssertion($identifier['match'], $operator['token'], $array);
         }
 
+        if (in_array($operator['token'], ['T_OP_NULL', 'T_OP_NNULL'], true)) {
+            return new ASTAssertion($identifier['match'], $operator['token'], null);
+        }
+
         $literal = $this->nextToken();
 
         if ($literal['token'] == 'T_FUNCTION_CALL') {
@@ -240,6 +244,8 @@ class Parser
             case 'T_OP_LIKE':
             case 'T_OP_IN':
             case 'T_OP_NIN':
+            case 'T_OP_NULL':
+            case 'T_OP_NNULL':
                 return $operator;
                 break;
             default:

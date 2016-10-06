@@ -19,6 +19,8 @@ class StringDataType extends AbstractDataType
             FilterCondition::METHOD_STRING_LIKE,
             FilterCondition::METHOD_IN,
             FilterCondition::METHOD_NIN,
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
         ];
     }
 
