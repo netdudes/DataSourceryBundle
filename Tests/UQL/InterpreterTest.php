@@ -12,6 +12,7 @@ use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\Query\FilterConditionFactory;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
+use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
 
 class InterpreterTest extends \PHPUnit_Framework_TestCase
@@ -108,6 +109,38 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
 
         // EQ is valid for String, and should choose STRING_EQ as it's the default for the type
         $this->assertEquals(FilterCondition::METHOD_STRING_EQ, $interpreter->translateOperator('T_OP_EQ', $dataSourceElement), 'Failed to translate T_OP_EQ into STRING_EQ for type String');
+    }
+
+    public function testInStatementsOnlyAcceptArraysAsValues()
+    {
+        $astSubtree = new ASTAssertion('field', 'T_OP_IN', '123');
+        $field = new Field('field', '', '', new NumberDataType());
+
+        $dataSourceProphecy = $this->prophesize(DataSourceInterface::class);
+        $dataSourceProphecy->getFields()->willReturn([$field]);
+
+        $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
+        $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
+
+        $this->expectException(UQLInterpreterException::class);
+        $this->expectExceptionMessage('Only arrays are valid arguments for IN / NOT IN statements');
+        $interpreter->buildFilter($astSubtree);
+    }
+
+    public function testNullValueCanBeCheckedOnlyWithIsOperator()
+    {
+        $astSubtree = new ASTAssertion('field', 'T_OP_GT', null);
+        $field = new Field('field', '', '', new NumberDataType());
+
+        $dataSourceProphecy = $this->prophesize(DataSourceInterface::class);
+        $dataSourceProphecy->getFields()->willReturn([$field]);
+
+        $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
+        $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
+
+        $this->expectException(UQLInterpreterException::class);
+        $this->expectExceptionMessage('Only IS / IS NOT operator can be used to compare against null value');
+        $interpreter->buildFilter($astSubtree);
     }
 
     protected function setUp()

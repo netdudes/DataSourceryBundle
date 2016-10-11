@@ -410,6 +410,9 @@ class Parser
             case 'T_LITERAL_TRUE':
                 $match = true;
                 break;
+            case 'T_LITERAL_NULL':
+                $match = null;
+                break;
             default:
                 $match = $literal['match'];
         }

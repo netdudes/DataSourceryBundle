@@ -114,6 +114,7 @@ class Filterer
         if (
             (in_array($filterMethod, [FilterCondition::METHOD_IN, FilterCondition::METHOD_NIN]) && count($valueInDatabase) <= 0) ||
             ($filterMethod == FilterCondition::METHOD_IS_NULL)
+            || null === $filterCondition->getValue()
         ) {
             $ignoreParameter = true;
         }
@@ -144,6 +145,16 @@ class Filterer
         $filterMethod = $filterCondition->getMethod();
         $identifier = $this->uniqueNameToQueryFieldMap[$filterCondition->getFieldName()];
         $value = $filterCondition->getValue();
+
+        if (null === $value) {
+            if ($this->isNullFiltering($filterMethod)) {
+                return $queryBuilder->expr()->isNull($identifier);
+            } elseif ($this->isNotNullFiltering($filterMethod)) {
+                return $queryBuilder->expr()->isNotNull($identifier);
+            } else {
+                throw new \Exception("The $filterMethod operator cannot be used to compare against null value");
+            }
+        }
 
         switch ($filterMethod) {
             case FilterCondition::METHOD_STRING_LIKE:
@@ -236,5 +247,33 @@ class Filterer
         }
 
         return $dataSourceField->getDatabaseFilterQueryField();
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return bool
+     */
+    private function isNullFiltering($method)
+    {
+        return in_array($method, [
+            FilterCondition::METHOD_STRING_EQ,
+            FilterCondition::METHOD_NUMERIC_EQ,
+            FilterCondition::METHOD_DATETIME_EQ,
+        ]);
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return bool
+     */
+    private function isNotNullFiltering($method)
+    {
+        return in_array($method, [
+            FilterCondition::METHOD_STRING_NEQ,
+            FilterCondition::METHOD_NUMERIC_NEQ,
+            FilterCondition::METHOD_DATETIME_NEQ,
+        ]);
     }
 }

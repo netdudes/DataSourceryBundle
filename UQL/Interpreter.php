@@ -354,19 +354,30 @@ class Interpreter
      */
     private function getValue(ASTAssertion $astSubtree)
     {
-        if ($astSubtree->getValue() instanceof ASTFunctionCall) {
-            return $this->callFunction($astSubtree->getValue());
+        $value = $astSubtree->getValue();
+        $operator = $astSubtree->getOperator();
+
+        if ($value instanceof ASTFunctionCall) {
+            return $this->callFunction($value);
         }
 
-        if (in_array($astSubtree->getOperator(), ['T_OP_IN', 'T_OP_NIN'])) {
-            if (!($astSubtree->getValue() instanceof ASTArray)) {
+        if (in_array($operator, ['T_OP_IN', 'T_OP_NIN'])) {
+            if (!($value instanceof ASTArray)) {
                 throw new UQLInterpreterException('Only arrays are valid arguments for IN / NOT IN statements');
             }
 
-            return $this->parseArray($astSubtree->getValue()->getElements());
+            return $this->parseArray($value->getElements());
         }
 
-        return $this->parseValue($astSubtree->getValue());
+        if (null === $value) {
+            if (!in_array($operator, ['T_OP_EQ', 'T_OP_NEQ'])) {
+                throw new UQLInterpreterException('Only IS / IS NOT operator can be used to compare against null value');
+            }
+
+            return null;
+        }
+
+        return $this->parseValue($value);
     }
 
     /**
