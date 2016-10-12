@@ -15,9 +15,9 @@
     "bin-dir": "bin"
   },
   "require": {
-    "php": ">=5.5",
-    "doctrine/orm": "^2.5.1",
-    "doctrine/doctrine-bundle": "^1.5.3"
+    "php": ">=7.0",
+    "doctrine/orm": "^2.5",
+    "doctrine/doctrine-bundle": "^1.6"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
