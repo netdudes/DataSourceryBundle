@@ -113,7 +113,7 @@ class Filterer
         // Ignore value if needed
         if (
             (in_array($filterMethod, [FilterCondition::METHOD_IN, FilterCondition::METHOD_NIN]) && count($valueInDatabase) <= 0) ||
-            ($filterMethod == FilterCondition::METHOD_IS_NULL)
+            in_array($filterMethod, [FilterCondition::METHOD_IS_NULL, FilterCondition::METHOD_IS_NNULL])
         ) {
             $ignoreParameter = true;
         }
@@ -187,10 +187,8 @@ class Filterer
                     return $queryBuilder->expr()->notIn($identifier, $token);
                 }
             case FilterCondition::METHOD_IS_NULL:
-                if ($filterCondition->getValue()) {
-                    return $queryBuilder->expr()->isNull($identifier);
-                }
-
+                return $queryBuilder->expr()->isNull($identifier);
+            case FilterCondition::METHOD_IS_NNULL:
                 return $queryBuilder->expr()->isNotNull($identifier);
             default:
                 throw new \Exception("Unknown filtering method \"$filterMethod\" for column \"" . $filterCondition->getFieldName() . '"');

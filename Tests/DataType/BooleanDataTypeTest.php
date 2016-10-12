@@ -14,7 +14,9 @@ class BooleanDataTypeTest extends \PHPUnit_Framework_TestCase
     public function testExpectedAvailableFilterMethods()
     {
         $expectedAvailableMethods = [
-            FilterCondition::METHOD_BOOLEAN
+            FilterCondition::METHOD_BOOLEAN,
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
         ];
 
         $this->assertSame($expectedAvailableMethods, $this->dataType->getAvailableFilterMethods());

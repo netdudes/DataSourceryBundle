@@ -134,6 +134,7 @@ class Interpreter
             FilterCondition::METHOD_NIN => "not in",
             FilterCondition::METHOD_BOOLEAN => "is",
             FilterCondition::METHOD_IS_NULL => "is null",
+            FilterCondition::METHOD_IS_NNULL => "is not null",
             FilterCondition::METHOD_DATETIME_GT => "after",
             FilterCondition::METHOD_DATETIME_GTE => "after or at",
             FilterCondition::METHOD_DATETIME_EQ => "at",
@@ -226,6 +227,12 @@ class Interpreter
             ],
             "T_OP_NIN" => [
                 FilterCondition::METHOD_NIN,
+            ],
+            "T_OP_NULL" => [
+                FilterCondition::METHOD_IS_NULL,
+            ],
+            "T_OP_NNULL" => [
+                FilterCondition::METHOD_IS_NNULL,
             ],
         ];
 
@@ -364,6 +371,14 @@ class Interpreter
             }
 
             return $this->parseArray($astSubtree->getValue()->getElements());
+        }
+
+        if (in_array($astSubtree->getOperator(), ['T_OP_NULL', 'T_OP_NNULL'])) {
+            if (null !== $astSubtree->getValue()) {
+                throw new UQLInterpreterException('Value of IS (NOT) NULL statements should be null');
+            }
+
+            return null;
         }
 
         return $this->parseValue($astSubtree->getValue());

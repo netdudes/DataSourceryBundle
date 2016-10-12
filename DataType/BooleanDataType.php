@@ -14,7 +14,9 @@ class BooleanDataType extends AbstractDataType
     public function getAvailableFilterMethods()
     {
         return [
-            FilterCondition::METHOD_BOOLEAN
+            FilterCondition::METHOD_BOOLEAN,
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
         ];
     }
 

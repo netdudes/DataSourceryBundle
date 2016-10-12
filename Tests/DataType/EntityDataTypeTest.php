@@ -16,7 +16,8 @@ class EntityDataTypeTest extends \PHPUnit_Framework_TestCase
         $expectedAvailableMethods = [
             FilterCondition::METHOD_NUMERIC_EQ,
             FilterCondition::METHOD_NUMERIC_NEQ,
-            FilterCondition::METHOD_IS_NULL
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
         ];
 
         $this->assertSame($expectedAvailableMethods, $this->dataType->getAvailableFilterMethods());

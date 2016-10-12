@@ -29,6 +29,7 @@ class FilterCondition
     const METHOD_NIN = "NIN";
     const METHOD_BOOLEAN = "BOOLEAN";
     const METHOD_IS_NULL = "IS_NULL";
+    const METHOD_IS_NNULL = "IS_NOT_NULL";
     const METHOD_DATETIME_GT = "DATETIME_GT";
     const METHOD_DATETIME_GTE = "DATETIME_GTE";
     const METHOD_DATETIME_EQ = "DATETIME_EQ";

@@ -20,6 +20,8 @@ class DateDataType extends AbstractDataType
             FilterCondition::METHOD_DATETIME_LTE,
             FilterCondition::METHOD_DATETIME_LT,
             FilterCondition::METHOD_DATETIME_NEQ,
+            FilterCondition::METHOD_IS_NULL,
+            FilterCondition::METHOD_IS_NNULL,
         ];
     }
 
