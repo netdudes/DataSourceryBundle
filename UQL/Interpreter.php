@@ -133,7 +133,6 @@ class Interpreter
             FilterCondition::METHOD_IN => "in",
             FilterCondition::METHOD_NIN => "not in",
             FilterCondition::METHOD_BOOLEAN => "is",
-            FilterCondition::METHOD_IS_NULL => "is null",
             FilterCondition::METHOD_DATETIME_GT => "after",
             FilterCondition::METHOD_DATETIME_GTE => "after or at",
             FilterCondition::METHOD_DATETIME_EQ => "at",

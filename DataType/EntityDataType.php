@@ -16,7 +16,6 @@ class EntityDataType extends AbstractDataType
         return [
             FilterCondition::METHOD_NUMERIC_EQ,
             FilterCondition::METHOD_NUMERIC_NEQ,
-            FilterCondition::METHOD_IS_NULL
         ];
     }
 
