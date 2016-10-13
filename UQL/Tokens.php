@@ -30,6 +30,7 @@ class Tokens
         'LITERAL' => [
             'T_LITERAL_TRUE',
             'T_LITERAL_FALSE',
+            'T_LITERAL_EMPTY',
             'T_FUNCTION_CALL',
             'T_LITERAL'
         ],
@@ -54,7 +55,8 @@ class Tokens
         'T_OP_OR' => ['or'],
         'T_OP_XOR' => ['xor'],
         'T_LITERAL_FALSE' => ['false'],
-        'T_LITERAL_TRUE' => ['true']
+        'T_LITERAL_TRUE' => ['true'],
+        'T_LITERAL_EMPTY' => ['empty'],
     ];
 
     private static $baseTokens = [
@@ -68,6 +70,7 @@ class Tokens
         "/^(OR)(\s|$)/i" => "T_LOGIC_OR",
         "/^(false)(\s|$)/i" => "T_LITERAL_FALSE",
         "/^(true)(\s|$)/i" => "T_LITERAL_TRUE",
+        "/^(empty)(\s|$)/i" => "T_LITERAL_EMPTY",
         "/^([a-zA-Z0-9]+\([^\(\)]*\))/" => "T_FUNCTION_CALL",
         "/^([0-9]+|'[^']*'|\"[^\"]*\")/" => "T_LITERAL",
         "/^([a-zA-Z\\_]+)/" => "T_IDENTIFIER",
