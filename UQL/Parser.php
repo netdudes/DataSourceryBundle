@@ -410,7 +410,7 @@ class Parser
             case 'T_LITERAL_TRUE':
                 $match = true;
                 break;
-            case 'T_LITERAL_NULL':
+            case 'T_LITERAL_EMPTY':
                 $match = null;
                 break;
             default:

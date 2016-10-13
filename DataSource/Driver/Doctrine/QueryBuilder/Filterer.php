@@ -146,10 +146,16 @@ class Filterer
         $value = $filterCondition->getValue();
 
         if (null === $value) {
-            if ($this->isNullFiltering($filterMethod)) {
-                return $queryBuilder->expr()->isNull($identifier);
-            } elseif ($this->isNotNullFiltering($filterMethod)) {
-                return $queryBuilder->expr()->isNotNull($identifier);
+            if ($this->isEmptyFiltering($filterMethod)) {
+                return $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->eq($identifier, $queryBuilder->expr()->literal('')),
+                    $queryBuilder->expr()->isNull($identifier)
+                );
+            } elseif ($this->isNotEmptyFiltering($filterMethod)) {
+                return $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->neq($identifier, $queryBuilder->expr()->literal('')),
+                    $queryBuilder->expr()->isNotNull($identifier)
+                );
             } else {
                 throw new \Exception("The $filterMethod operator cannot be used to compare against null value");
             }
@@ -247,7 +253,7 @@ class Filterer
      *
      * @return bool
      */
-    private function isNullFiltering($method)
+    private function isEmptyFiltering($method)
     {
         return in_array($method, [
             FilterCondition::METHOD_STRING_EQ,
@@ -261,7 +267,7 @@ class Filterer
      *
      * @return bool
      */
-    private function isNotNullFiltering($method)
+    private function isNotEmptyFiltering($method)
     {
         return in_array($method, [
             FilterCondition::METHOD_STRING_NEQ,
