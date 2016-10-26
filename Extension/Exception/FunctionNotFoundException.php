@@ -2,6 +2,8 @@
 
 namespace Netdudes\DataSourceryBundle\Extension\Exception;
 
-class FunctionNotFoundException extends \Exception
+use Netdudes\DataSourceryBundle\UQL\Exception\UQLException;
+
+class FunctionNotFoundException extends UQLException
 {
 }
