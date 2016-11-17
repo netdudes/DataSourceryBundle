@@ -80,7 +80,7 @@ class RequiredFieldsExtractor
         $dependantFields = [];
         foreach ($fieldNames as $fieldName) {
             $field = $this->getField($fieldName);
-            if ($field && is_array($field->getDatabaseSelectAlias())) {
+            if ($field !== null && is_array($field->getDatabaseSelectAlias())) {
                 foreach ($field->getDatabaseSelectAlias() as $secondLevelRequiredField) {
                     $dependantFields[] = $secondLevelRequiredField;
                 }
