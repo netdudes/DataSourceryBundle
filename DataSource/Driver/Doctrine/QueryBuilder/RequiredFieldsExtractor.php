@@ -80,16 +80,7 @@ class RequiredFieldsExtractor
         $dependantFields = [];
         foreach ($fieldNames as $fieldName) {
             $field = $this->getField($fieldName);
-            if (!$field) {
-                $allFieldNames = array_map(
-                    function (Field $field) {
-                        return $field->getUniqueName();
-                    },
-                    $this->queryBuilderDataSourceFields
-                );
-                throw new \Exception("Field unique name '$fieldName' not in list of fields: " . implode(', ', $allFieldNames));
-            }
-            if (is_array($field->getDatabaseSelectAlias())) {
+            if ($field !== null && is_array($field->getDatabaseSelectAlias())) {
                 foreach ($field->getDatabaseSelectAlias() as $secondLevelRequiredField) {
                     $dependantFields[] = $secondLevelRequiredField;
                 }

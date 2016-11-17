@@ -23,7 +23,7 @@ class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
 
         $requiredFields = $extractor->extractRequiredFields($query);
 
-        $this->assertCount(7, $requiredFields);
+        $this->assertCount(8, $requiredFields);
         $this->assertContains('TEST_FIELD_1_REQUIRED_BY_COMPLEX', $requiredFields);
         $this->assertContains('TEST_FIELD_2_REQUIRED_BY_COMPLEX', $requiredFields);
         $this->assertContains('TEST_FIELD_3_THAT_IS_COMPLEX', $requiredFields);
@@ -32,6 +32,7 @@ class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('TEST_FIELD_6_REQUIRED_BY_FILTER', $requiredFields);
         $this->assertContains('TEST_FIELD_7_REQUIRED_BY_SORT', $requiredFields);
         $this->assertNotContains('TEST_FIELD_8_NOT_REQUIRED', $requiredFields);
+        $this->assertContains('UNSUPPORTED_FIELD', $requiredFields);
     }
 
     /**
@@ -76,7 +77,7 @@ class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
         $query = new Query();
         $query->setFilter($filter);
         $query->setSort($sort);
-        $query->setSelect(['TEST_FIELD_4_REQUIRED_BY_SELECT', 'TEST_FIELD_3_THAT_IS_COMPLEX']);
+        $query->setSelect(['TEST_FIELD_4_REQUIRED_BY_SELECT', 'TEST_FIELD_3_THAT_IS_COMPLEX', 'UNSUPPORTED_FIELD']);
 
         return $query;
     }
