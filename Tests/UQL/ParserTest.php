@@ -11,9 +11,6 @@ use Netdudes\DataSourceryBundle\UQL\Parser;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     *  Test the functionality of the operator token matcher
-     */
     public function testMatchOperator()
     {
         $parser = new Parser();
@@ -48,9 +45,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * Test the functionality of the logic token matcher
-     */
     public function testMatchLogic()
     {
         $parser = new Parser();
@@ -80,9 +74,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * Test the functionality of the assertion syntax matcher
-     */
     public function testMatchAssertion()
     {
         // Case 1: Correct assertion
@@ -171,9 +162,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * Test the functionality of the statement syntax matcher
-     */
     public function testMatchStatement()
     {
         // Case 1: Returns a group
@@ -216,9 +204,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($mockParser->matchStatement());
     }
 
-    /**
-     * Test the functionality of the group syntax matcher
-     */
     public function testMatchGroup()
     {
         // Case 1: Correct
@@ -279,9 +264,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * Test the functionality of the concatenation syntax matcher
-     */
     public function testMatchConcatenation()
     {
         // Case 1: There is no statement at the beginning
@@ -442,9 +424,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('T_LOGIC_AND', $result->getLogic());
     }
 
-    /**
-     * Tests the functionality of the array matcher
-     */
     public function testMatchArray()
     {
         $testArrays = [

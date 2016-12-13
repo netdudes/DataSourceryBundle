@@ -27,9 +27,6 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
      */
     private $extensionContainerProphecy;
 
-    /**
-     * Test the filter construction against a typical complex multilevel situation.
-     */
     public function testBuildFilter()
     {
         $astSubtree = new ASTGroup(
@@ -122,8 +119,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
-        $this->expectException(UQLInterpreterException::class);
-        $this->expectExceptionMessage('Only arrays are valid arguments for IN / NOT IN statements');
+        $this->setExpectedException(UQLInterpreterException::class, 'Only arrays are valid arguments for IN / NOT IN statements');
         $interpreter->buildFilter($astSubtree);
     }
 
@@ -138,8 +134,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
-        $this->expectException(UQLInterpreterException::class);
-        $this->expectExceptionMessage('Only IS / IS NOT operator can be used to compare against null value');
+        $this->setExpectedException(UQLInterpreterException::class, 'Only IS / IS NOT operator can be used to compare against null value');
         $interpreter->buildFilter($astSubtree);
     }
 

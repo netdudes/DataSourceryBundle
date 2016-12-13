@@ -1,7 +1,6 @@
 <?php
 namespace Netdudes\DataSourceryBundle\Tests\DataSource\Driver\Doctrine\QueryBuilder;
 
-use Netdudes\DataSourceryBundle\DataSource\Configuration\Entity\QueryBuilderDataSourceFieldsFromConfigurationGenerator;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\JoinGenerator;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
@@ -9,9 +8,6 @@ use Netdudes\DataSourceryBundle\Query\Query;
 
 class JoinGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\JoinGenerator::generate
-     */
     public function testGenerate()
     {
         $generator = $this->buildJoinGenerator();

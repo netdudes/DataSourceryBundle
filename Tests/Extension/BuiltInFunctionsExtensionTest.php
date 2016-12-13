@@ -7,9 +7,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * This is just used to manually test the function
-     */
     public function testNow()
     {
         $extension = $this->getExtension();
