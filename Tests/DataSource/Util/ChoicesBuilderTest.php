@@ -6,9 +6,6 @@ use Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder;
 
 class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     */
     public function testBuildingChoicesWithInvalidConfig()
     {
         $invalidConfig = 'invalid configuration';
@@ -17,15 +14,10 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('No usable configuration was found');
+        $this->setExpectedException(\Exception::class, 'No usable configuration was found');
         $builder->build($invalidConfig);
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::getChoicesFromRepositoryForField
-     */
     public function testBuildingChoicesFromRepositoryField()
     {
         $fieldName = 'a_field';
@@ -37,8 +29,8 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
             [$fieldName => 'choice 3'],
         ];
 
-        $queryMock = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')  // because Query is final
-            ->disableOriginalConstructor()
+        $queryMock = $this->getMockBuilder('Doctrine\ORM\AbstractQuery')// because Query is final
+        ->disableOriginalConstructor()
             ->getMock();
         $queryMock->expects($this->once())
             ->method('getArrayResult')
@@ -64,10 +56,12 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
             ->willReturn($repositoryMock);
 
         $builder = new ChoicesBuilder($emMock);
-        $choices = $builder->build([
-            'repository' => $repositoryName,
-            'field' => $fieldName,
-        ]);
+        $choices = $builder->build(
+            [
+                'repository' => $repositoryName,
+                'field' => $fieldName,
+            ]
+        );
 
         $expectedChoices = [
             'choice 1' => 'choice 1',
@@ -77,10 +71,6 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedChoices, $choices);
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::getChoicesFromRepositoryWithMethod
-     */
     public function testBuildingChoicesFromRepositoryMethod()
     {
         $methodName = 'a_method';
@@ -104,10 +94,12 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
             ->willReturn($repositoryMock);
 
         $builder = new ChoicesBuilder($emMock);
-        $choices = $builder->build([
-            'repository' => $repositoryName,
-            'method' => $methodName,
-        ]);
+        $choices = $builder->build(
+            [
+                'repository' => $repositoryName,
+                'method' => $methodName,
+            ]
+        );
 
         $expectedChoices = [
             'choice 1',
@@ -117,10 +109,6 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedChoices, $choices);
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::getChoicesFromRepositoryWithMethod
-     */
     public function testBuildingChoicesFromRepositoryMethodWhenMethodDoesNotExist()
     {
         $methodName = 'a_method';
@@ -138,18 +126,15 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Specified repository does not have \'other_method\' method');
-        $builder->build([
-            'repository' => $repositoryName,
-            'method' => 'other_method',
-        ]);
+        $this->setExpectedException(\Exception::class, "Specified repository does not have 'other_method' method");
+        $builder->build(
+            [
+                'repository' => $repositoryName,
+                'method' => 'other_method',
+            ]
+        );
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::getChoicesFromRepositoryWithMethod
-     */
     public function testBuildingChoicesFromRepositoryMethodWhenMethodDoesNotReturnAnArray()
     {
         $methodName = 'a_method';
@@ -168,17 +153,15 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("Repository method $methodName must return an array of choices");
-        $builder->build([
-            'repository' => $repositoryName,
-            'method' => $methodName,
-        ]);
+        $this->setExpectedException(\Exception::class, "Repository method $methodName must return an array of choices");
+        $builder->build(
+            [
+                'repository' => $repositoryName,
+                'method' => $methodName,
+            ]
+        );
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     */
     public function testBuildingChoicesFromRepositoryWhenSpecifyingBothFieldAndMethod()
     {
         $repositoryName = 'a_test_repository';
@@ -193,18 +176,16 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Repository source expects field or method parameter, but not both');
-        $builder->build([
-            'repository' => $repositoryName,
-            'field' => 'a_field',
-            'method' => 'a_method',
-        ]);
+        $this->setExpectedException(\Exception::class, 'Repository source expects field or method parameter, but not both');
+        $builder->build(
+            [
+                'repository' => $repositoryName,
+                'field' => 'a_field',
+                'method' => 'a_method',
+            ]
+        );
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     */
     public function testBuildingChoicesFromRepositoryWithoutSpecifyingFieldOrMethod()
     {
         $repositoryName = 'a_test_repository';
@@ -219,17 +200,14 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Repository source expects field or method parameter');
-        $builder->build([
-            'repository' => $repositoryName,
-        ]);
+        $this->setExpectedException(\Exception::class, 'Repository source expects field or method parameter');
+        $builder->build(
+            [
+                'repository' => $repositoryName,
+            ]
+        );
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::getChoicesFromCallable
-     */
     public function testBuildingChoicesFromCallable()
     {
         $aCallable = function () {
@@ -249,10 +227,6 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedChoices, $choices);
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::build
-     * @covers Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder::getChoicesFromCallable
-     */
     public function testBuildingChoicesFromCallableWhenResultIsNotAnArray()
     {
         $aCallable = function () {
@@ -263,8 +237,7 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('The provided choice callback must return an array of choices');
+        $this->setExpectedException(\Exception::class, 'The provided choice callback must return an array of choices');
         $builder->build($aCallable);
     }
 

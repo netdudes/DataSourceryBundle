@@ -2,7 +2,6 @@
 namespace Netdudes\DataSourceryBundle\Tests\DataSource\Driver\Doctrine\QueryBuilder;
 
 use Doctrine\ORM\Query\Expr\Join;
-use Netdudes\DataSourceryBundle\DataSource\Configuration\Entity\QueryBuilderDataSourceFieldsFromConfigurationGenerator;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\JoinGenerator;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\RequiredFieldsExtractor;
@@ -12,9 +11,6 @@ use Netdudes\DataSourceryBundle\Query\Query;
 
 class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\SelectGenerator::getSelectFieldMap
-     */
     public function testGetSelectFieldMap()
     {
         $generator = $this->buildSelectGenerator();
@@ -32,9 +28,6 @@ class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('RELATION_3_ALIAS.FIELD_3', $map['RELATION_2_RELATION_3_FIELD_3'], 'Unexpected select path for alias');
     }
 
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\SelectGenerator::generate
-     */
     public function testGenerate()
     {
         $generator = $this->buildSelectGenerator();
@@ -49,7 +42,7 @@ class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\RequiredFieldsExtractor
+     * @return RequiredFieldsExtractor
      */
     private function buildRequiredFieldsExtractor()
     {
@@ -67,7 +60,7 @@ class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\JoinGenerator
+     * @return JoinGenerator
      */
     private function buildJoinGenerator()
     {
@@ -104,7 +97,7 @@ class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\SelectGenerator
+     * @return SelectGenerator
      */
     private function buildSelectGenerator()
     {

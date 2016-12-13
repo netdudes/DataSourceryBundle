@@ -8,6 +8,8 @@ cache:
        - "$HOME/.composer/cache"
        - "$HOME/.php-cs-fixer"
 before_script:
+    # Additional PHP config
+    - phpenv config-add travis.php.ini
     - composer install --dev --no-interaction --prefer-source
     - mkdir -p "$HOME/.php-cs-fixer"
 script:

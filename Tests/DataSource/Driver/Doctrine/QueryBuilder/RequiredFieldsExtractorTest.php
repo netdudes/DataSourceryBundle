@@ -1,7 +1,6 @@
 <?php
 namespace Netdudes\DataSourceryBundle\Tests\DataSource\Driver\Doctrine\QueryBuilder;
 
-use Netdudes\DataSourceryBundle\DataSource\Configuration\Entity\QueryBuilderDataSourceFieldsFromConfigurationGenerator;
 use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\RequiredFieldsExtractor;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
@@ -13,9 +12,6 @@ use Netdudes\DataSourceryBundle\Query\SortCondition;
 
 class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\RequiredFieldsExtractor::extractRequiredFields
-     */
     public function testExtractRequiredFields()
     {
         $extractor = $this->buildExtractor();
@@ -36,7 +32,7 @@ class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\RequiredFieldsExtractor
+     * @return RequiredFieldsExtractor
      */
     protected function buildExtractor()
     {
