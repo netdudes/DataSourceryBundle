@@ -224,9 +224,11 @@ class Filterer
         }
 
         if (count($value) <= 0) {
-            // The array is empty, therefore this will always be "false". We use an always-false expression
-            // to emulate this without actually using an invalid empty array in the IN statement.
-            return '1=2';
+            if ($method === FilterCondition::METHOD_IN) {
+                return '1=2';
+            }
+
+            return '1=1';
         }
 
         if ($method === FilterCondition::METHOD_IN) {
