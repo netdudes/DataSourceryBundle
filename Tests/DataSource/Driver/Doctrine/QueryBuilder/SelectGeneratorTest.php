@@ -8,8 +8,9 @@ use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\Required
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\SelectGenerator;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
 use Netdudes\DataSourceryBundle\Query\Query;
+use PHPUnit\Framework\TestCase;
 
-class SelectGeneratorTest extends \PHPUnit_Framework_TestCase
+class SelectGeneratorTest extends TestCase
 {
     public function testGetSelectFieldMap()
     {

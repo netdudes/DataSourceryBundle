@@ -3,8 +3,9 @@ namespace Netdudes\DataSourceryBundle\Tests\DataType;
 
 use Netdudes\DataSourceryBundle\DataType\SearchTextDataType;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use PHPUnit\Framework\TestCase;
 
-class SearchTextDataTypeTest extends \PHPUnit_Framework_TestCase
+class SearchTextDataTypeTest extends TestCase
 {
     /**
      * @var SearchTextDataType

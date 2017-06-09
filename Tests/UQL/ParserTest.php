@@ -8,8 +8,9 @@ use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
 use Netdudes\DataSourceryBundle\UQL\Exception\UQLSyntaxError;
 use Netdudes\DataSourceryBundle\UQL\Lexer;
 use Netdudes\DataSourceryBundle\UQL\Parser;
+use PHPUnit\Framework\TestCase;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends TestCase
 {
     public function testMatchOperator()
     {

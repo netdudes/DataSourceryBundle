@@ -3,8 +3,9 @@ namespace Netdudes\DataSourceryBundle\Tests\DataType;
 
 use Netdudes\DataSourceryBundle\DataType\PercentDataType;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use PHPUnit\Framework\TestCase;
 
-class PercentDataTypeTest extends \PHPUnit_Framework_TestCase
+class PercentDataTypeTest extends TestCase
 {
     /**
      * @var PercentDataType

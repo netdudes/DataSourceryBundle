@@ -3,8 +3,9 @@
 namespace Netdudes\DataSourceryBundle\Tests\UQL;
 
 use Netdudes\DataSourceryBundle\UQL\Lexer;
+use PHPUnit\Framework\TestCase;
 
-class LexerTest extends \PHPUnit_Framework_TestCase
+class LexerTest extends TestCase
 {
     /**
      * @dataProvider provideValidStringAndToken

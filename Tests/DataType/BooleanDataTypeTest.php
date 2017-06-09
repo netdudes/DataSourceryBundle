@@ -3,8 +3,9 @@ namespace Netdudes\DataSourceryBundle\Tests\DataType;
 
 use Netdudes\DataSourceryBundle\DataType\BooleanDataType;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use PHPUnit\Framework\TestCase;
 
-class BooleanDataTypeTest extends \PHPUnit_Framework_TestCase
+class BooleanDataTypeTest extends TestCase
 {
     /**
      * @var BooleanDataType

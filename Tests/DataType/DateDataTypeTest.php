@@ -3,8 +3,9 @@ namespace Netdudes\DataSourceryBundle\Tests\DataType;
 
 use Netdudes\DataSourceryBundle\DataType\DateDataType;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use PHPUnit\Framework\TestCase;
 
-class DateDataTypeTest extends \PHPUnit_Framework_TestCase
+class DateDataTypeTest extends TestCase
 {
     /**
      * @var DateDataType

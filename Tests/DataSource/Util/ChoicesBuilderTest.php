@@ -3,8 +3,9 @@
 namespace Netdudes\DataSourceryBundle\Tests\DataSource\Util;
 
 use Netdudes\DataSourceryBundle\DataSource\Util\ChoicesBuilder;
+use PHPUnit\Framework\TestCase;
 
-class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
+class ChoicesBuilderTest extends TestCase
 {
     public function testBuildingChoicesWithInvalidConfig()
     {
@@ -14,7 +15,8 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException(\Exception::class, 'No usable configuration was found');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No usable configuration was found');
         $builder->build($invalidConfig);
     }
 
@@ -126,7 +128,8 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException(\Exception::class, "Specified repository does not have 'other_method' method");
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Specified repository does not have 'other_method' method");
         $builder->build(
             [
                 'repository' => $repositoryName,
@@ -153,7 +156,8 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException(\Exception::class, "Repository method $methodName must return an array of choices");
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Repository method $methodName must return an array of choices");
         $builder->build(
             [
                 'repository' => $repositoryName,
@@ -176,7 +180,8 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException(\Exception::class, 'Repository source expects field or method parameter, but not both');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Repository source expects field or method parameter, but not both');
         $builder->build(
             [
                 'repository' => $repositoryName,
@@ -200,7 +205,8 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException(\Exception::class, 'Repository source expects field or method parameter');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Repository source expects field or method parameter');
         $builder->build(
             [
                 'repository' => $repositoryName,
@@ -237,7 +243,8 @@ class ChoicesBuilderTest extends \PHPUnit_Framework_TestCase
 
         $builder = new ChoicesBuilder($emMock);
 
-        $this->setExpectedException(\Exception::class, 'The provided choice callback must return an array of choices');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('The provided choice callback must return an array of choices');
         $builder->build($aCallable);
     }
 

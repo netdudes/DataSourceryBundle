@@ -6,9 +6,10 @@ use Netdudes\DataSourceryBundle\DataType\DataTypeInterface;
 use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\Query\SearchTextFilterConditionTransformer;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
-class SearchTextFilterConditionTransformerTest extends \PHPUnit_Framework_TestCase
+class SearchTextFilterConditionTransformerTest extends TestCase
 {
     public function testTransformCreatesFilterWithOrMethod()
     {

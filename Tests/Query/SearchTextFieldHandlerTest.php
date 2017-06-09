@@ -8,9 +8,10 @@ use Netdudes\DataSourceryBundle\Query\Filter;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\Query\SearchTextFieldHandler;
 use Netdudes\DataSourceryBundle\Query\SearchTextFilterConditionTransformer;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
-class SearchTextFieldHandlerTest extends \PHPUnit_Framework_TestCase
+class SearchTextFieldHandlerTest extends TestCase
 {
     public function testHandlerDoesNotTransformNonSearchTextFields()
     {
