@@ -5,8 +5,9 @@ use Netdudes\DataSourceryBundle\DataSource\Configuration\Field;
 use Netdudes\DataSourceryBundle\DataSource\Driver\Doctrine\QueryBuilder\JoinGenerator;
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
 use Netdudes\DataSourceryBundle\Query\Query;
+use PHPUnit\Framework\TestCase;
 
-class JoinGeneratorTest extends \PHPUnit_Framework_TestCase
+class JoinGeneratorTest extends TestCase
 {
     public function testGenerate()
     {

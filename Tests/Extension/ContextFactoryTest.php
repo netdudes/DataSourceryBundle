@@ -3,8 +3,9 @@ namespace Netdudes\DataSourceryBundle\Tests\Extension;
 
 use Netdudes\DataSourceryBundle\Extension\Context;
 use Netdudes\DataSourceryBundle\Extension\ContextFactory;
+use PHPUnit\Framework\TestCase;
 
-class ContextFactoryTest extends \PHPUnit_Framework_TestCase
+class ContextFactoryTest extends TestCase
 {
     public function testCreateAContext()
     {

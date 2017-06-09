@@ -3,8 +3,9 @@ namespace Netdudes\DataSourceryBundle\Tests\DataType;
 
 use Netdudes\DataSourceryBundle\DataType\NumberDataType;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use PHPUnit\Framework\TestCase;
 
-class NumberDataTypeTest extends \PHPUnit_Framework_TestCase
+class NumberDataTypeTest extends TestCase
 {
     /**
      * @var NumberDataType

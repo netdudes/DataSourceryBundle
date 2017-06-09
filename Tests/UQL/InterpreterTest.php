@@ -14,8 +14,9 @@ use Netdudes\DataSourceryBundle\UQL\AST\ASTAssertion;
 use Netdudes\DataSourceryBundle\UQL\AST\ASTGroup;
 use Netdudes\DataSourceryBundle\UQL\Exception\UQLInterpreterException;
 use Netdudes\DataSourceryBundle\UQL\InterpreterFactory;
+use PHPUnit\Framework\TestCase;
 
-class InterpreterTest extends \PHPUnit_Framework_TestCase
+class InterpreterTest extends TestCase
 {
     /**
      * @var ContextFactory
@@ -119,7 +120,8 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
-        $this->setExpectedException(UQLInterpreterException::class, 'Only arrays are valid arguments for IN / NOT IN statements');
+        $this->expectException(UQLInterpreterException::class);
+        $this->expectExceptionMessage('Only arrays are valid arguments for IN / NOT IN statements');
         $interpreter->buildFilter($astSubtree);
     }
 
@@ -134,7 +136,8 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
         $interpreterFactory = new InterpreterFactory($this->extensionContainerProphecy->reveal(), new FilterConditionFactory(), $this->contextFactoryProphecy->reveal());
         $interpreter = $interpreterFactory->create($dataSourceProphecy->reveal());
 
-        $this->setExpectedException(UQLInterpreterException::class, 'Only IS / IS NOT operator can be used to compare against null value');
+        $this->expectException(UQLInterpreterException::class);
+        $this->expectExceptionMessage('Only IS / IS NOT operator can be used to compare against null value');
         $interpreter->buildFilter($astSubtree);
     }
 

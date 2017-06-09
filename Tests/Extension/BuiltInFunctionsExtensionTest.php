@@ -3,9 +3,10 @@ namespace Netdudes\DataSourceryBundle\Tests\Extension;
 
 use Netdudes\DataSourceryBundle\Extension\BuiltInFunctionsExtension;
 use Netdudes\DataSourceryBundle\Util\CurrentDateTimeProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class BuiltInFunctionsExtensionTest extends \PHPUnit_Framework_TestCase
+class BuiltInFunctionsExtensionTest extends TestCase
 {
     public function testNow()
     {

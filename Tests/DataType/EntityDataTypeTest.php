@@ -3,8 +3,9 @@ namespace Netdudes\DataSourceryBundle\Tests\DataType;
 
 use Netdudes\DataSourceryBundle\DataType\EntityDataType;
 use Netdudes\DataSourceryBundle\Query\FilterCondition;
+use PHPUnit\Framework\TestCase;
 
-class EntityDataTypeTest extends \PHPUnit_Framework_TestCase
+class EntityDataTypeTest extends TestCase
 {
     /**
      * @var EntityDataType

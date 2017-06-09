@@ -9,8 +9,9 @@ use Netdudes\DataSourceryBundle\Query\FilterCondition;
 use Netdudes\DataSourceryBundle\Query\Query;
 use Netdudes\DataSourceryBundle\Query\Sort;
 use Netdudes\DataSourceryBundle\Query\SortCondition;
+use PHPUnit\Framework\TestCase;
 
-class RequiredFieldsExtractorTest extends \PHPUnit_Framework_TestCase
+class RequiredFieldsExtractorTest extends TestCase
 {
     public function testExtractRequiredFields()
     {
