@@ -1,3 +1,5 @@
+### ****** WARNING: THIS PROJECT IS NO LONGER MAINTAINED!! ******
+
 # Netdudes\DataSourceryBundle
 [![Build Status](https://travis-ci.org/netdudes/DataSourceryBundle.svg?branch=master)](https://travis-ci.org/netdudes/DataSourceryBundle)
 [![Code Climate](https://codeclimate.com/github/netdudes/DataSourceryBundle/badges/gpa.svg)](https://codeclimate.com/github/netdudes/DataSourceryBundle)
